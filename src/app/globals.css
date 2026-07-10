@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #0b1b2b;
+
+  --color-brand-50: #eef8ff;
+  --color-brand-100: #dcf0fe;
+  --color-brand-200: #b6e2fd;
+  --color-brand-300: #7fccfa;
+  --color-brand-400: #3aabf0;
+  --color-brand-500: #128fd8;
+  --color-brand-600: #0771b4;
+  --color-brand-700: #075b92;
+  --color-brand-800: #0a4a76;
+  --color-brand-900: #0d3c60;
+  --color-brand-950: #082238;
+
+  --color-accent-50: #fff8ec;
+  --color-accent-100: #ffefd0;
+  --color-accent-200: #ffdc9e;
+  --color-accent-300: #ffc35c;
+  --color-accent-400: #ffab2e;
+  --color-accent-500: #f78e10;
+  --color-accent-600: #db6a08;
+  --color-accent-700: #b64c0a;
+  --color-accent-800: #933b10;
+  --color-accent-900: #783210;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  --color-brand-50: var(--color-brand-50);
+  --color-brand-100: var(--color-brand-100);
+  --color-brand-200: var(--color-brand-200);
+  --color-brand-300: var(--color-brand-300);
+  --color-brand-400: var(--color-brand-400);
+  --color-brand-500: var(--color-brand-500);
+  --color-brand-600: var(--color-brand-600);
+  --color-brand-700: var(--color-brand-700);
+  --color-brand-800: var(--color-brand-800);
+  --color-brand-900: var(--color-brand-900);
+  --color-brand-950: var(--color-brand-950);
+
+  --color-accent-50: var(--color-accent-50);
+  --color-accent-100: var(--color-accent-100);
+  --color-accent-200: var(--color-accent-200);
+  --color-accent-300: var(--color-accent-300);
+  --color-accent-400: var(--color-accent-400);
+  --color-accent-500: var(--color-accent-500);
+  --color-accent-600: var(--color-accent-600);
+  --color-accent-700: var(--color-accent-700);
+  --color-accent-800: var(--color-accent-800);
+  --color-accent-900: var(--color-accent-900);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+.bg-grid {
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    rgba(255, 255, 255, 0.15) 1px,
+    transparent 0
+  );
+  background-size: 24px 24px;
+}

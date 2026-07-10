@@ -1,0 +1,19 @@
+import Hero from "@/components/home/hero";
+import ServicesGrid from "@/components/home/services-grid";
+import HowItWorks from "@/components/home/how-it-works";
+import MissionVision from "@/components/home/mission-vision";
+import PaymentPartners from "@/components/home/payment-partners";
+import CTA from "@/components/home/cta";
+
+export default function Home() {
+  return (
+    <>
+      <Hero />
+      <ServicesGrid />
+      <HowItWorks />
+      <MissionVision />
+      <PaymentPartners />
+      <CTA />
+    </>
+  );
+}
