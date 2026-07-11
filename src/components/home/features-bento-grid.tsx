@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import { PlayCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { siteConfig } from "@/lib/data/site-config";
+import Reveal from "@/components/ui/reveal";
 
 const collageImages = [
   "/media/gallery/egypt-sphinx.jpg",
@@ -50,7 +51,7 @@ const features = [
 export default function FeaturesBentoGrid() {
   return (
     <div className="relative z-20 mx-auto max-w-7xl py-16 lg:py-24">
-      <div className="px-4 sm:px-6 lg:px-8">
+      <Reveal className="px-4 sm:px-6 lg:px-8">
         <h2 className="mx-auto max-w-2xl text-center text-3xl font-bold tracking-tight text-brand-950 sm:text-4xl">
           Built for travelers, not travel agents
         </h2>
@@ -58,16 +59,18 @@ export default function FeaturesBentoGrid() {
           A self-service platform with the real infrastructure to back it up — live pricing, real
           partners, and support when you want it.
         </p>
-      </div>
+      </Reveal>
 
       <div className="relative px-4 sm:px-6 lg:px-8">
-        <div className="mt-12 grid grid-cols-1 rounded-md border border-brand-100 md:grid-cols-6">
-          {features.map((feature) => (
-            <FeatureCard key={feature.title} className={feature.className}>
-              <FeatureTitle>{feature.title}</FeatureTitle>
-              <FeatureDescription>{feature.description}</FeatureDescription>
-              <div className="h-full w-full">{feature.skeleton}</div>
-            </FeatureCard>
+        <div className="mt-12 grid grid-cols-1 overflow-hidden rounded-md border border-brand-100 md:grid-cols-6">
+          {features.map((feature, i) => (
+            <Reveal key={feature.title} delay={(i % 2) * 0.1} className={feature.className}>
+              <FeatureCard>
+                <FeatureTitle>{feature.title}</FeatureTitle>
+                <FeatureDescription>{feature.description}</FeatureDescription>
+                <div className="h-full w-full">{feature.skeleton}</div>
+              </FeatureCard>
+            </Reveal>
           ))}
         </div>
       </div>
@@ -76,7 +79,16 @@ export default function FeaturesBentoGrid() {
 }
 
 function FeatureCard({ children, className }: { children?: React.ReactNode; className?: string }) {
-  return <div className={cn("relative overflow-hidden p-4 sm:p-8", className)}>{children}</div>;
+  return (
+    <div
+      className={cn(
+        "group relative h-full overflow-hidden p-4 transition-colors duration-300 hover:bg-brand-50/60 sm:p-8",
+        className,
+      )}
+    >
+      {children}
+    </div>
+  );
 }
 
 function FeatureTitle({ children }: { children?: React.ReactNode }) {

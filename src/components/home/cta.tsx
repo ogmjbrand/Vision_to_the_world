@@ -2,6 +2,7 @@
 
 import Container from "@/components/ui/container";
 import { LinkButton } from "@/components/ui/button";
+import Reveal from "@/components/ui/reveal";
 import { useLanguage } from "@/components/i18n/language-provider";
 
 export default function CTA() {
@@ -10,7 +11,7 @@ export default function CTA() {
   return (
     <section className="py-20">
       <Container>
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-900 to-brand-950 px-8 py-16 text-center sm:px-16">
+        <Reveal className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-900 to-brand-950 px-8 py-16 text-center sm:px-16">
           <div
             className="absolute -bottom-16 -left-16 h-64 w-64 rounded-full bg-accent-500/20 blur-3xl"
             aria-hidden
@@ -29,7 +30,7 @@ export default function CTA() {
               {t.cta.talkToConsultant}
             </LinkButton>
           </div>
-        </div>
+        </Reveal>
       </Container>
     </section>
   );
