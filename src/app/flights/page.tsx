@@ -5,7 +5,7 @@ import Container from "@/components/ui/container";
 import SearchWidget from "@/components/search/search-widget";
 import FlightCard from "@/components/flights/flight-card";
 import { getService } from "@/lib/data/services";
-import { generateFlightResults } from "@/lib/data/mock-results";
+import { searchFlights } from "@/lib/travel-search";
 
 export const metadata: Metadata = {
   title: "Flight Booking",
@@ -25,11 +25,12 @@ export default async function FlightsPage({
   const destination =
     typeof params.destination === "string" ? params.destination : undefined;
   const date = typeof params.date === "string" ? params.date : undefined;
+  const travelers = typeof params.travelers === "string" ? Number(params.travelers) : 1;
 
   const hasSearch = !!(origin && destination && date);
-  const results = hasSearch
-    ? generateFlightResults(origin, destination, date)
-    : [];
+  const { source, results } = hasSearch
+    ? await searchFlights(origin, destination, date, travelers || 1)
+    : { source: "mock" as const, results: [] };
 
   return (
     <>
@@ -56,10 +57,12 @@ export default async function FlightsPage({
                 <FlightCard key={flight.id} flight={flight} />
               ))}
             </div>
-            <p className="mt-6 text-center text-xs text-brand-400">
-              Results shown are illustrative pending live Amadeus
-              integration credentials.
-            </p>
+            {source === "mock" && (
+              <p className="mt-6 text-center text-xs text-brand-400">
+                Live availability for this route is temporarily unavailable —
+                showing illustrative pricing instead.
+              </p>
+            )}
           </div>
         ) : (
           <div className="rounded-2xl border border-dashed border-brand-200 bg-brand-50/60 p-10 text-center">

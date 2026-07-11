@@ -1,16 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { generateHotelResults } from "@/lib/data/mock-results";
-import { isAmadeusConfigured } from "@/lib/amadeus/config";
-import { fetchHotelOffers } from "@/lib/amadeus/hotels";
+import { searchHotels } from "@/lib/travel-search";
 
 /**
  * Hotel search endpoint.
  *
  * Uses the Amadeus Hotel Search API when AMADEUS_CLIENT_ID/SECRET are
  * configured (falls back to mock data automatically for destinations that
- * can't be resolved to an IATA city code, or on any upstream error). Swap
- * in BOOKING_API_KEY / the Booking.com Demand API here if that becomes
- * available instead.
+ * can't be resolved to an IATA city code, or on any upstream error).
  */
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -26,20 +22,7 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  let source: "amadeus" | "mock" = "mock";
-  let results = generateHotelResults(destination);
-
-  if (isAmadeusConfigured) {
-    try {
-      const liveResults = await fetchHotelOffers(destination, checkIn, checkOut, guests);
-      if (liveResults && liveResults.length > 0) {
-        results = liveResults;
-        source = "amadeus";
-      }
-    } catch (err) {
-      console.error("Amadeus hotel search failed, falling back to mock data:", err);
-    }
-  }
+  const { source, results } = await searchHotels(destination, checkIn, checkOut, guests);
 
   return NextResponse.json({
     source,

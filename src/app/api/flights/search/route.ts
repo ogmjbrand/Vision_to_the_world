@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { generateFlightResults } from "@/lib/data/mock-results";
-import { isAmadeusConfigured } from "@/lib/amadeus/config";
-import { fetchFlightOffers } from "@/lib/amadeus/flights";
+import { searchFlights } from "@/lib/travel-search";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -17,20 +15,7 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  let source: "amadeus" | "mock" = "mock";
-  let results = generateFlightResults(origin, destination, date);
-
-  if (isAmadeusConfigured) {
-    try {
-      const liveResults = await fetchFlightOffers(origin, destination, date, travelers);
-      if (liveResults.length > 0) {
-        results = liveResults;
-        source = "amadeus";
-      }
-    } catch (err) {
-      console.error("Amadeus flight search failed, falling back to mock data:", err);
-    }
-  }
+  const { source, results } = await searchFlights(origin, destination, date, travelers);
 
   return NextResponse.json({
     source,

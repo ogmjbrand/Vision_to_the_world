@@ -1,7 +1,13 @@
 import { amadeusGet } from "@/lib/amadeus/client";
+import { searchLocations } from "@/lib/amadeus/locations";
 import type { HotelResult } from "@/lib/data/mock-results";
 
-/** Best-effort city-name → IATA city code lookup for the Amadeus Hotel List API. */
+/**
+ * Fast-path city-name → IATA city code lookup for a handful of common
+ * destinations, to avoid an extra round trip to the Amadeus Locations API.
+ * Anything not listed here still resolves worldwide via resolveCityCode's
+ * live Amadeus fallback below — this is a cache, not a limit.
+ */
 const CITY_CODES: Record<string, string> = {
   london: "LON",
   paris: "PAR",
@@ -31,11 +37,26 @@ const CITY_CODES: Record<string, string> = {
   "addis ababa": "ADD",
 };
 
-function resolveCityCode(destination: string): string | null {
-  const key = destination.trim().toLowerCase();
+/**
+ * Resolves any worldwide city name (or an already-known IATA code) to an
+ * Amadeus city code. Checks the static cache first, then a bare 3-letter
+ * code passthrough, then falls back to a live Amadeus city search so no
+ * country or destination is unsupported.
+ */
+async function resolveCityCode(destination: string): Promise<string | null> {
+  const trimmed = destination.trim();
+  const key = trimmed.toLowerCase();
   if (CITY_CODES[key]) return CITY_CODES[key];
-  if (/^[a-zA-Z]{3}$/.test(destination.trim())) return destination.trim().toUpperCase();
-  return null;
+  if (/^[a-zA-Z]{3}$/.test(trimmed)) return trimmed.toUpperCase();
+
+  try {
+    const matches = await searchLocations(trimmed);
+    const city = matches.find((m) => m.subType === "CITY") ?? matches[0];
+    return city?.iataCode ?? null;
+  } catch (err) {
+    console.error("Amadeus city lookup failed:", err);
+    return null;
+  }
 }
 
 type HotelListResponse = {
@@ -68,7 +89,7 @@ export async function fetchHotelOffers(
   guests = 2,
   max = 6,
 ): Promise<HotelResult[] | null> {
-  const cityCode = resolveCityCode(destination);
+  const cityCode = await resolveCityCode(destination);
   if (!cityCode) return null;
 
   const list = await amadeusGet<HotelListResponse>(

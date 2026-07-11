@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Plane, Hotel, Car, BusFront, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
+import LocationAutocomplete from "@/components/search/location-autocomplete";
 
 type Tab = "flights" | "hotels" | "car-rental" | "airport-transfers";
 
@@ -57,21 +58,19 @@ export default function SearchWidget() {
         {tab === "flights" && (
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-5">
             <div className="sm:col-span-1">
-              <label className={labelClass}>From</label>
-              <input
+              <LocationAutocomplete
                 name="origin"
+                label="From"
+                placeholder="Any city or airport"
                 required
-                placeholder="e.g. LOS"
-                className={inputClass}
               />
             </div>
             <div className="sm:col-span-1">
-              <label className={labelClass}>To</label>
-              <input
+              <LocationAutocomplete
                 name="destination"
+                label="To"
+                placeholder="Any city or airport"
                 required
-                placeholder="e.g. LHR"
-                className={inputClass}
               />
             </div>
             <div className="sm:col-span-1">
@@ -98,12 +97,12 @@ export default function SearchWidget() {
         {tab === "hotels" && (
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-4">
             <div className="sm:col-span-1">
-              <label className={labelClass}>Destination</label>
-              <input
+              <LocationAutocomplete
                 name="destination"
+                label="Destination"
+                placeholder="Any city, worldwide"
+                subTypeFilter="CITY"
                 required
-                placeholder="City or hotel"
-                className={inputClass}
               />
             </div>
             <div className="sm:col-span-1">

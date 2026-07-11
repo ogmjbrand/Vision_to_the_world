@@ -5,7 +5,7 @@ import Container from "@/components/ui/container";
 import SearchWidget from "@/components/search/search-widget";
 import HotelCard from "@/components/hotels/hotel-card";
 import { getService } from "@/lib/data/services";
-import { generateHotelResults } from "@/lib/data/mock-results";
+import { searchHotels } from "@/lib/travel-search";
 
 export const metadata: Metadata = {
   title: "Hotel Booking",
@@ -26,9 +26,12 @@ export default async function HotelsPage({
   const checkIn = typeof params.checkIn === "string" ? params.checkIn : undefined;
   const checkOut =
     typeof params.checkOut === "string" ? params.checkOut : undefined;
+  const guests = typeof params.guests === "string" ? Number(params.guests) : 2;
 
   const hasSearch = !!(destination && checkIn && checkOut);
-  const results = hasSearch ? generateHotelResults(destination) : [];
+  const { source, results } = hasSearch
+    ? await searchHotels(destination, checkIn, checkOut, guests || 2)
+    : { source: "mock" as const, results: [] };
 
   return (
     <>
@@ -54,10 +57,12 @@ export default async function HotelsPage({
                 <HotelCard key={hotel.id} hotel={hotel} />
               ))}
             </div>
-            <p className="mt-6 text-center text-xs text-brand-400">
-              Results shown are illustrative pending live Booking.com
-              integration credentials.
-            </p>
+            {source === "mock" && (
+              <p className="mt-6 text-center text-xs text-brand-400">
+                Live availability for this destination is temporarily
+                unavailable — showing illustrative pricing instead.
+              </p>
+            )}
           </div>
         ) : (
           <div className="rounded-2xl border border-dashed border-brand-200 bg-brand-50/60 p-10 text-center">
