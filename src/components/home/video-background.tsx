@@ -3,7 +3,16 @@
 import { useEffect, useRef } from "react";
 import { usePrefersReducedMotion } from "@/lib/hooks/use-reduced-motion";
 
-export default function VideoBackground({ src, poster }: { src: string; poster?: string }) {
+export default function VideoBackground({
+  src,
+  poster,
+  overlay = "solid",
+}: {
+  src: string;
+  poster?: string;
+  /** "glass" gives a frosted, semi-transparent overlay instead of the default solid dark gradient. */
+  overlay?: "solid" | "glass";
+}) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const prefersReducedMotion = usePrefersReducedMotion();
   const allowMotion = !prefersReducedMotion;
@@ -35,7 +44,11 @@ export default function VideoBackground({ src, poster }: { src: string; poster?:
         // eslint-disable-next-line @next/next/no-img-element
         <img src={poster} alt="" className="h-full w-full object-cover" />
       )}
-      <div className="absolute inset-0 bg-gradient-to-br from-brand-950/90 via-brand-900/80 to-brand-800/70" />
+      {overlay === "glass" ? (
+        <div className="absolute inset-0 border-b border-[rgba(255,255,255,0.2)] bg-[rgba(15,23,42,0.35)] backdrop-blur-[12px] [-webkit-backdrop-filter:blur(12px)]" />
+      ) : (
+        <div className="absolute inset-0 bg-gradient-to-br from-brand-950/90 via-brand-900/80 to-brand-800/70" />
+      )}
     </div>
   );
 }
