@@ -6,13 +6,13 @@ export type Founder = {
 
 export const founders: Founder[] = [
   {
-    name: "Demy Abdalla",
+    name: "Jackie Max",
     title: "Founder",
-    photo: "/media/team/demy-abdalla.jpg",
+    photo: "/media/team/jackie-max.jpg",
   },
   {
-    name: "Jackie Max",
+    name: "Demy Abdalla",
     title: "Co-Founder",
-    photo: "/media/team/jackie-max.jpg",
+    photo: "/media/team/demy-abdalla.jpg",
   },
 ];
