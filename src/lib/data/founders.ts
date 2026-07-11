@@ -6,7 +6,7 @@ export type Founder = {
 
 export const founders: Founder[] = [
   {
-    name: "Jackie Max",
+    name: "Jacqueline Max",
     title: "Founder",
     photo: "/media/team/jackie-max.jpg",
   },
