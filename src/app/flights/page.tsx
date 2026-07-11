@@ -33,7 +33,7 @@ export default async function FlightsPage({
 
   return (
     <>
-      <ServiceHero service={service} />
+      <ServiceHero slug={service.slug} />
       <Container className="py-12">
         <div className="-mt-24 mb-10">
           <SearchWidget />

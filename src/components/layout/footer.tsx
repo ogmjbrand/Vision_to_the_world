@@ -1,29 +1,13 @@
+"use client";
+
 import Link from "next/link";
 import { Mail, MapPin, Phone, MessageCircle } from "lucide-react";
 import Logo from "@/components/layout/logo";
 import { services } from "@/lib/data/services";
 import { siteConfig, fullAddress } from "@/lib/data/site-config";
-
-const company = [
-  { href: "/about", label: "About Us" },
-  { href: "/about#mission", label: "Mission & Vision" },
-  { href: "/dashboard", label: "My Account" },
-  { href: "/admin", label: "Admin" },
-];
-
-const support = [
-  { href: "/faq", label: "FAQ" },
-  { href: "/visa-assistance", label: "Visa & Travel Assistance" },
-  { href: "/travel-insurance", label: "Travel Insurance" },
-  { href: "/contact", label: "Contact Support" },
-  { href: "/contact#consultant", label: "Talk to a Travel Consultant" },
-];
-
-const legal = [
-  { href: "/privacy-policy", label: "Privacy Policy" },
-  { href: "/terms-conditions", label: "Terms & Conditions" },
-  { href: "/refund-policy", label: "Refund Policy" },
-];
+import { useLanguage } from "@/components/i18n/language-provider";
+import { getServiceCopy } from "@/lib/i18n/types";
+import LanguageSwitcher from "@/components/i18n/language-switcher";
 
 const payments = ["Stripe", "PayPal", "Cash App"];
 
@@ -35,16 +19,36 @@ const socialLinks = [
 ] as const;
 
 export default function Footer() {
+  const { t } = useLanguage();
+
+  const company = [
+    { href: "/about", label: t.footer.company.about },
+    { href: "/about#mission", label: t.footer.company.mission },
+    { href: "/dashboard", label: t.footer.company.account },
+    { href: "/admin", label: t.footer.company.admin },
+  ];
+
+  const support = [
+    { href: "/faq", label: t.footer.support.faq },
+    { href: "/visa-assistance", label: t.footer.support.visa },
+    { href: "/travel-insurance", label: t.footer.support.insurance },
+    { href: "/contact", label: t.footer.support.contact },
+    { href: "/contact#consultant", label: t.footer.support.consultant },
+  ];
+
+  const legal = [
+    { href: "/privacy-policy", label: t.footer.legal.privacy },
+    { href: "/terms-conditions", label: t.footer.legal.terms },
+    { href: "/refund-policy", label: t.footer.legal.refund },
+  ];
+
   return (
     <footer className="border-t border-brand-900 bg-brand-950 text-brand-100">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-4">
           <div className="md:col-span-1">
             <Logo dark />
-            <p className="mt-4 max-w-xs text-sm text-brand-300">
-              A next-generation self-service travel technology platform to
-              search, compare, book, and manage every part of your journey.
-            </p>
+            <p className="mt-4 max-w-xs text-sm text-brand-300">{t.footer.blurb}</p>
             <ul className="mt-4 space-y-2 text-sm text-brand-300">
               <li className="flex items-center gap-2">
                 <Mail className="h-4 w-4 shrink-0 text-accent-400" />
@@ -105,11 +109,15 @@ export default function Footer() {
                 );
               })}
             </div>
+
+            <div className="mt-5">
+              <LanguageSwitcher variant="dark" className="[&>button]:pl-0" />
+            </div>
           </div>
 
           <div>
             <h3 className="text-sm font-semibold uppercase tracking-wide text-white">
-              Services
+              {t.footer.servicesHeading}
             </h3>
             <ul className="mt-4 space-y-2 text-sm">
               {services.map((service) => (
@@ -118,7 +126,7 @@ export default function Footer() {
                     href={`/${service.slug}`}
                     className="text-brand-300 hover:text-white"
                   >
-                    {service.name}
+                    {getServiceCopy(t, service.slug).name}
                   </Link>
                 </li>
               ))}
@@ -127,7 +135,7 @@ export default function Footer() {
 
           <div>
             <h3 className="text-sm font-semibold uppercase tracking-wide text-white">
-              Company
+              {t.footer.companyHeading}
             </h3>
             <ul className="mt-4 space-y-2 text-sm">
               {company.map((item) => (
@@ -140,7 +148,7 @@ export default function Footer() {
             </ul>
 
             <h3 className="mt-6 text-sm font-semibold uppercase tracking-wide text-white">
-              Support
+              {t.footer.supportHeading}
             </h3>
             <ul className="mt-4 space-y-2 text-sm">
               {support.map((item) => (
@@ -155,11 +163,9 @@ export default function Footer() {
 
           <div>
             <h3 className="text-sm font-semibold uppercase tracking-wide text-white">
-              Secure Payments
+              {t.footer.paymentsHeading}
             </h3>
-            <p className="mt-4 text-sm text-brand-300">
-              Pay your way with trusted global and regional payment gateways.
-            </p>
+            <p className="mt-4 text-sm text-brand-300">{t.footer.paymentsBlurb}</p>
             <div className="mt-4 flex flex-wrap gap-2">
               {payments.map((p) => (
                 <span
@@ -174,10 +180,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-10 flex flex-col gap-4 border-t border-brand-900 pt-6 text-sm text-brand-400 sm:flex-row sm:items-center sm:justify-between">
-          <p>
-            &copy; {new Date().getFullYear()} Vision To The World. All rights
-            reserved.
-          </p>
+          <p>&copy; {t.footer.copyright.replace("{year}", String(new Date().getFullYear()))}</p>
           <ul className="flex flex-wrap gap-x-5 gap-y-2">
             {legal.map((item) => (
               <li key={item.href}>
@@ -187,7 +190,7 @@ export default function Footer() {
               </li>
             ))}
           </ul>
-          <p>Your Journey. Your Choice. Your World.</p>
+          <p>{t.footer.taglineBottom}</p>
         </div>
       </div>
     </footer>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
 import SiteChrome from "@/components/layout/site-chrome";
+import { LanguageProvider } from "@/components/i18n/language-provider";
 import { siteConfig, siteUrl } from "@/lib/data/site-config";
 
 const playfair = Playfair_Display({
@@ -94,7 +95,9 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col bg-white text-[var(--foreground)]">
-        <SiteChrome>{children}</SiteChrome>
+        <LanguageProvider>
+          <SiteChrome>{children}</SiteChrome>
+        </LanguageProvider>
       </body>
     </html>
   );

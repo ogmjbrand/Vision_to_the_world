@@ -5,15 +5,18 @@ import { Star, Quote } from "lucide-react";
 import Container from "@/components/ui/container";
 import SectionHeading from "@/components/ui/section-heading";
 import { testimonials } from "@/lib/data/testimonials";
+import { useLanguage } from "@/components/i18n/language-provider";
 
 export default function Testimonials() {
+  const { t } = useLanguage();
+
   return (
     <section className="bg-brand-50 py-20">
       <Container>
         <SectionHeading
-          eyebrow="Trusted by travelers worldwide"
-          title="What our travelers are saying"
-          description="Real feedback from people who booked flights, hotels, packages, and more through Vision To The World."
+          eyebrow={t.testimonials.eyebrow}
+          title={t.testimonials.title}
+          description={t.testimonials.description}
         />
 
         <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">

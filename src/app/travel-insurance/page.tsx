@@ -60,7 +60,7 @@ const plans = [
 export default function TravelInsurancePage() {
   return (
     <>
-      <ServiceHero service={service} />
+      <ServiceHero slug={service.slug} />
       <Container className="py-16">
         <SectionHeading
           eyebrow="Optional coverage"

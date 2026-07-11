@@ -44,7 +44,7 @@ const topics = [
 export default function VisaAssistancePage() {
   return (
     <>
-      <ServiceHero service={service} />
+      <ServiceHero slug={service.slug} />
       <Container className="py-16">
         <SectionHeading
           eyebrow="Travel with confidence"

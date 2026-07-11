@@ -20,7 +20,7 @@ const service = getService("packages")!;
 export default function PackagesPage() {
   return (
     <>
-      <ServiceHero service={service} />
+      <ServiceHero slug={service.slug} />
       <Container className="py-16">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {travelPackages.map((pkg) => (
