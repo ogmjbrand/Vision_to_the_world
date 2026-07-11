@@ -5,6 +5,7 @@ import SectionHeading from "@/components/ui/section-heading";
 import MissionVision from "@/components/home/mission-vision";
 import CTA from "@/components/home/cta";
 import VideoBackground from "@/components/home/video-background";
+import Founders from "@/components/about/founders";
 
 export const metadata: Metadata = {
   title: "About Us",
@@ -94,6 +95,8 @@ export default function AboutPage() {
           </p>
         </Container>
       </section>
+
+      <Founders />
 
       <CTA />
     </>
