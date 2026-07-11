@@ -1,11 +1,11 @@
 import { getResendClient } from "@/lib/resend/server";
 import { RESEND_FROM_EMAIL } from "@/lib/resend/config";
-import { siteConfig } from "@/lib/data/site-config";
+import { siteConfig, siteUrl } from "@/lib/data/site-config";
 import { formatCurrency } from "@/lib/utils";
 
 const BRAND_NAVY = "#082238";
 const ACCENT = "#f78e10";
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://vision-to-the-world-i2wb.vercel.app";
+const SITE_URL = siteUrl;
 
 function emailLayout(bodyHtml: string) {
   return `<!doctype html>

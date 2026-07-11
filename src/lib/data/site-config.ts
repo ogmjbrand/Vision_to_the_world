@@ -29,3 +29,6 @@ export const siteConfig = {
 };
 
 export const fullAddress = `${siteConfig.address.street}, ${siteConfig.address.city}, ${siteConfig.address.state} ${siteConfig.address.zip}`;
+
+export const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://vision-to-the-world-i2wb.vercel.app";

@@ -12,10 +12,17 @@ const company = [
 ];
 
 const support = [
+  { href: "/faq", label: "FAQ" },
   { href: "/visa-assistance", label: "Visa & Travel Assistance" },
   { href: "/travel-insurance", label: "Travel Insurance" },
   { href: "/contact", label: "Contact Support" },
   { href: "/contact#consultant", label: "Talk to a Travel Consultant" },
+];
+
+const legal = [
+  { href: "/privacy-policy", label: "Privacy Policy" },
+  { href: "/terms-conditions", label: "Terms & Conditions" },
+  { href: "/refund-policy", label: "Refund Policy" },
 ];
 
 const payments = ["Stripe", "PayPal", "Cash App"];
@@ -166,11 +173,20 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-brand-900 pt-6 text-sm text-brand-400 sm:flex-row">
+        <div className="mt-10 flex flex-col gap-4 border-t border-brand-900 pt-6 text-sm text-brand-400 sm:flex-row sm:items-center sm:justify-between">
           <p>
             &copy; {new Date().getFullYear()} Vision To The World. All rights
             reserved.
           </p>
+          <ul className="flex flex-wrap gap-x-5 gap-y-2">
+            {legal.map((item) => (
+              <li key={item.href}>
+                <Link href={item.href} className="hover:text-white">
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
           <p>Your Journey. Your Choice. Your World.</p>
         </div>
       </div>

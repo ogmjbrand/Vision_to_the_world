@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
 import SiteChrome from "@/components/layout/site-chrome";
-import { siteConfig } from "@/lib/data/site-config";
+import { siteConfig, siteUrl } from "@/lib/data/site-config";
 
 const playfair = Playfair_Display({
   variable: "--font-heading",
@@ -15,13 +15,16 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
+const description =
+  "Vision To The World is a next-generation self-service travel technology platform to search, compare, book, and manage flights, hotels, car rentals, airport transfers, travel packages, visa assistance, and travel insurance — all in one place.";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
     default: "Vision To The World | Your Journey. Your Choice. Your World.",
     template: "%s | Vision To The World",
   },
-  description:
-    "Vision To The World is a next-generation self-service travel technology platform to search, compare, book, and manage flights, hotels, car rentals, airport transfers, travel packages, visa assistance, and travel insurance — all in one place.",
+  description,
   keywords: [
     "flight booking",
     "hotel booking",
@@ -32,6 +35,27 @@ export const metadata: Metadata = {
     "travel insurance",
     "self-service travel platform",
   ],
+  openGraph: {
+    type: "website",
+    siteName: siteConfig.name,
+    title: "Vision To The World | Your Journey. Your Choice. Your World.",
+    description,
+    url: siteUrl,
+    images: [
+      {
+        url: "/media/gallery/egypt-pyramids-panorama.jpg",
+        width: 1600,
+        height: 900,
+        alt: siteConfig.name,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Vision To The World | Your Journey. Your Choice. Your World.",
+    description,
+    images: ["/media/gallery/egypt-pyramids-panorama.jpg"],
+  },
 };
 
 const structuredData = {
