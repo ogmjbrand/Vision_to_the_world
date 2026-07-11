@@ -1,5 +1,6 @@
 import Hero from "@/components/home/hero";
 import ServicesGrid from "@/components/home/services-grid";
+import FeaturesBentoGrid from "@/components/home/features-bento-grid";
 import DestinationsGallery from "@/components/home/destinations-gallery";
 import HowItWorks from "@/components/home/how-it-works";
 import Testimonials from "@/components/home/testimonials";
@@ -12,6 +13,7 @@ export default function Home() {
     <>
       <Hero />
       <ServicesGrid />
+      <FeaturesBentoGrid />
       <DestinationsGallery />
       <HowItWorks />
       <Testimonials />

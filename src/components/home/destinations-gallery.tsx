@@ -1,61 +1,31 @@
 "use client";
 
-import Image from "next/image";
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence, type PanInfo } from "framer-motion";
 import Container from "@/components/ui/container";
-import { galleryDestinations, type GalleryDestination } from "@/lib/data/gallery";
-import { usePrefersReducedMotion } from "@/lib/hooks/use-reduced-motion";
-import { cn } from "@/lib/utils";
-
-function GalleryMedia({
-  dest,
-  allowMotion,
-  duration,
-}: {
-  dest: GalleryDestination;
-  allowMotion: boolean;
-  duration: number;
-}) {
-  return (
-    <motion.div
-      className="absolute inset-0"
-      animate={allowMotion ? { scale: [1, 1.12, 1] } : undefined}
-      transition={
-        allowMotion
-          ? { duration, repeat: Infinity, ease: "easeInOut" }
-          : undefined
-      }
-    >
-      {dest.video && allowMotion ? (
-        <video
-          className="h-full w-full object-cover"
-          src={dest.video}
-          poster={dest.image}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="none"
-        />
-      ) : (
-        <Image
-          src={dest.image}
-          alt={dest.title}
-          fill
-          sizes="(min-width: 640px) 25vw, 50vw"
-          className="object-cover"
-        />
-      )}
-    </motion.div>
-  );
-}
+import MediaItem from "@/components/home/gallery-media-item";
+import GalleryModal from "@/components/home/gallery-modal";
+import { galleryMediaItems, type GalleryMediaItem } from "@/lib/data/gallery-media";
 
 export default function DestinationsGallery() {
-  const prefersReducedMotion = usePrefersReducedMotion();
-  const allowMotion = !prefersReducedMotion;
+  const [selectedItem, setSelectedItem] = useState<GalleryMediaItem | null>(null);
+  const [items, setItems] = useState(galleryMediaItems);
+  const [isDragging, setIsDragging] = useState(false);
+
+  function handleTileDragEnd(index: number, info: PanInfo) {
+    setIsDragging(false);
+    const moveDistance = info.offset.x + info.offset.y;
+    if (Math.abs(moveDistance) <= 50) return;
+
+    const next = [...items];
+    const [dragged] = next.splice(index, 1);
+    const targetIndex = moveDistance > 0 ? Math.min(index + 1, items.length - 1) : Math.max(index - 1, 0);
+    next.splice(targetIndex, 0, dragged);
+    setItems(next);
+  }
 
   return (
-    <section className="bg-brand-950 py-20">
+    <section className="overflow-hidden bg-brand-950 py-20">
       <Container>
         <div className="max-w-2xl">
           <p className="text-sm font-semibold uppercase tracking-wide text-accent-400">
@@ -65,43 +35,67 @@ export default function DestinationsGallery() {
             Every journey starts with a picture like this
           </h2>
           <p className="mt-4 text-lg text-brand-300">
-            A few of the moments Vision To The World travelers have captured
-            along the way.
+            A few of the moments Vision To The World travelers have captured along the way. Drag
+            a tile to reorder it, or click one to open the viewer.
           </p>
         </div>
 
-        <div className="mt-12 grid grid-flow-dense auto-rows-[180px] grid-cols-2 gap-4 sm:auto-rows-[220px] sm:grid-cols-4">
-          {galleryDestinations.map((dest, i) => (
+        <AnimatePresence mode="wait">
+          {selectedItem ? (
+            <GalleryModal
+              selectedItem={selectedItem}
+              onClose={() => setSelectedItem(null)}
+              setSelectedItem={setSelectedItem}
+              mediaItems={items}
+            />
+          ) : (
             <motion.div
-              key={dest.slug}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.5, delay: (i % 4) * 0.08 }}
-              className={cn(
-                "group relative overflow-hidden rounded-2xl",
-                dest.span === "wide" && "col-span-2",
-                dest.span === "tall" && "row-span-2",
-              )}
+              className="mt-12 grid auto-rows-[40px] grid-flow-dense grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4"
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              variants={{
+                hidden: { opacity: 0 },
+                visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
+              }}
             >
-              <GalleryMedia
-                dest={dest}
-                allowMotion={allowMotion}
-                duration={18 + (i % 3) * 4}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent transition-opacity duration-300 group-hover:from-black/80" />
-              <div className="absolute inset-x-0 bottom-0 p-4">
-                <p className="text-sm font-semibold text-white">{dest.title}</p>
-                <p className="text-xs text-brand-200">{dest.location}</p>
-              </div>
-              {dest.video && allowMotion && (
-                <span className="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-black/40 backdrop-blur-sm">
-                  <span className="h-2 w-2 rounded-full bg-accent-400" />
-                </span>
-              )}
+              {items.map((item, index) => (
+                <motion.div
+                  key={item.id}
+                  layoutId={`media-${item.id}`}
+                  className={`group relative cursor-move overflow-hidden rounded-2xl ${item.span}`}
+                  onClick={() => !isDragging && setSelectedItem(item)}
+                  variants={{
+                    hidden: { y: 30, scale: 0.9, opacity: 0 },
+                    visible: {
+                      y: 0,
+                      scale: 1,
+                      opacity: 1,
+                      transition: { type: "spring", stiffness: 350, damping: 25, delay: index * 0.04 },
+                    },
+                  }}
+                  whileHover={{ scale: 1.02 }}
+                  drag
+                  dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
+                  dragElastic={1}
+                  onDragStart={() => setIsDragging(true)}
+                  onDragEnd={(_, info) => handleTileDragEnd(index, info)}
+                >
+                  <MediaItem
+                    item={item}
+                    className="absolute inset-0 h-full w-full"
+                    onClick={() => !isDragging && setSelectedItem(item)}
+                  />
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent transition-opacity duration-300 group-hover:from-black/80" />
+                  <div className="pointer-events-none absolute inset-x-0 bottom-0 p-4">
+                    <p className="text-sm font-semibold text-white">{item.title}</p>
+                    <p className="text-xs text-brand-200">{item.desc}</p>
+                  </div>
+                </motion.div>
+              ))}
             </motion.div>
-          ))}
-        </div>
+          )}
+        </AnimatePresence>
       </Container>
     </section>
   );
