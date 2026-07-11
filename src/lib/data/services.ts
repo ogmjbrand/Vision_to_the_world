@@ -16,6 +16,12 @@ export type Service = {
   description: string;
   icon: LucideIcon;
   features: string[];
+  /** Looping background video shown on the homepage services card, if set. */
+  cardVideo?: string;
+  cardVideoPoster?: string;
+  /** Looping background video shown on the service's own hero banner, if set. */
+  heroVideo?: string;
+  heroVideoPoster?: string;
 };
 
 export const services: Service[] = [
@@ -49,6 +55,10 @@ export const services: Service[] = [
       "Book instantly with real-time availability",
       "Receive immediate booking confirmation",
     ],
+    cardVideo: "/media/services/hotel-sunset-suite.mp4",
+    cardVideoPoster: "/media/services/hotel-sunset-suite-poster.jpg",
+    heroVideo: "/media/services/hotel-suite-night.mp4",
+    heroVideoPoster: "/media/services/hotel-suite-night-poster.jpg",
   },
   {
     slug: "car-rental",
@@ -63,6 +73,10 @@ export const services: Service[] = [
       "Flexible pickup and return options",
       "Secure online reservations",
     ],
+    cardVideo: "/media/services/car-rental-showcase.mp4",
+    cardVideoPoster: "/media/services/car-rental-showcase-poster.jpg",
+    heroVideo: "/media/services/car-rental-showcase.mp4",
+    heroVideoPoster: "/media/services/car-rental-showcase-poster.jpg",
   },
   {
     slug: "airport-transfers",

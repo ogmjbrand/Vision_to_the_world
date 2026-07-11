@@ -12,8 +12,23 @@ export default function ServiceHero({ slug }: { slug: string }) {
   const copy = getServiceCopy(t, slug);
 
   return (
-    <section className="bg-gradient-to-br from-brand-950 to-brand-800 py-16 sm:py-20">
-      <Container>
+    <section className="relative overflow-hidden bg-gradient-to-br from-brand-950 to-brand-800 py-16 sm:py-20">
+      {service.heroVideo && (
+        <>
+          <video
+            className="absolute inset-0 h-full w-full object-cover"
+            src={service.heroVideo}
+            poster={service.heroVideoPoster}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="none"
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-brand-950/90 via-brand-950/75 to-brand-900/60" />
+        </>
+      )}
+      <Container className="relative">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:items-center">
           <div>
             <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/10 text-accent-300 ring-1 ring-white/20">
@@ -29,7 +44,7 @@ export default function ServiceHero({ slug }: { slug: string }) {
             {copy.features.map((feature) => (
               <li
                 key={feature}
-                className="flex items-start gap-2 rounded-lg bg-white/5 p-3 text-sm text-brand-50 ring-1 ring-white/10"
+                className="flex items-start gap-2 rounded-lg bg-white/5 p-3 text-sm text-brand-50 ring-1 ring-white/10 backdrop-blur-sm"
               >
                 <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-accent-400" />
                 {feature}
