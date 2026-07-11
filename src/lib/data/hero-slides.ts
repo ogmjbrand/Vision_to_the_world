@@ -1,28 +1,27 @@
 export type HeroSlide = {
   id: string;
-  image: string;
+  video: string;
+  poster: string;
   location: string;
 };
 
 export const heroSlides: HeroSlide[] = [
   {
-    id: "giza",
-    image: "/media/gallery/egypt-pyramids-panorama.jpg",
-    location: "Giza, Egypt",
+    id: "golden-hour",
+    video: "/media/hero/flight-window-golden-hour.mp4",
+    poster: "/media/hero/flight-window-golden-hour-poster.jpg",
+    location: "Somewhere Over Europe",
   },
   {
-    id: "vineyard",
-    image: "/media/gallery/vineyard-lake-sunset.jpg",
-    location: "Lakeside Vineyards",
+    id: "mexico-city",
+    video: "/media/hero/flight-mexico-city-night-departure.mp4",
+    poster: "/media/hero/flight-mexico-city-night-departure-poster.jpg",
+    location: "Mexico City Departure",
   },
   {
-    id: "beach",
-    image: "/media/gallery/beachfront-dining.jpg",
-    location: "Saffron Beach",
-  },
-  {
-    id: "rainbow",
-    image: "/media/gallery/rainbow-valley.jpg",
-    location: "Open Road",
+    id: "frankfurt",
+    video: "/media/hero/flight-frankfurt-starry-takeoff.mp4",
+    poster: "/media/hero/flight-frankfurt-starry-takeoff-poster.jpg",
+    location: "Frankfurt, Germany",
   },
 ];

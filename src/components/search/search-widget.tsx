@@ -34,7 +34,7 @@ export default function SearchWidget() {
   }
 
   return (
-    <div className="w-full max-w-4xl rounded-2xl bg-white/95 p-3 shadow-2xl ring-1 ring-black/5 sm:p-5">
+    <div className="w-full max-w-4xl rounded-2xl bg-white/85 p-3 shadow-2xl ring-1 ring-white/40 backdrop-blur-xl sm:p-5">
       <div className="flex gap-1 overflow-x-auto pb-3">
         {tabs.map(({ id, label, icon: Icon }) => (
           <button

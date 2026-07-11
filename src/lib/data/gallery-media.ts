@@ -28,10 +28,10 @@ export const galleryMediaItems: GalleryMediaItem[] = [
   {
     id: 3,
     type: "video",
-    title: "All seven wonders in one view",
-    desc: "Giza, Egypt",
-    url: "/media/hero/hero-clip-2.mp4",
-    poster: "/media/gallery/egypt-pyramids-panorama.jpg",
+    title: "Wheels up for the next adventure",
+    desc: "Mexico City Departure",
+    url: "/media/hero/flight-mexico-city-night-departure.mp4",
+    poster: "/media/hero/flight-mexico-city-night-departure-poster.jpg",
     span: "col-span-1 sm:col-span-2 row-span-4",
   },
   {
@@ -61,10 +61,10 @@ export const galleryMediaItems: GalleryMediaItem[] = [
   {
     id: 7,
     type: "video",
-    title: "Golden hour over the vines",
-    desc: "Lakeside Vineyards",
-    url: "/media/hero/hero-clip-1.mp4",
-    poster: "/media/gallery/vineyard-lake-sunset.jpg",
+    title: "Golden hour, thirty thousand feet up",
+    desc: "Somewhere Over Europe",
+    url: "/media/hero/flight-window-golden-hour.mp4",
+    poster: "/media/hero/flight-window-golden-hour-poster.jpg",
     span: "col-span-1 sm:col-span-2 row-span-8",
   },
   {
