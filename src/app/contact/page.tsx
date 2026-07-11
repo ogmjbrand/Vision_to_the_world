@@ -3,6 +3,7 @@ import { Mail, Phone, Headphones, MessageCircle, MapPin } from "lucide-react";
 import Container from "@/components/ui/container";
 import SectionHeading from "@/components/ui/section-heading";
 import ContactForm from "@/components/contact/contact-form";
+import OfficeMapLoader from "@/components/contact/office-map-loader";
 import { siteConfig, fullAddress } from "@/lib/data/site-config";
 
 export const metadata: Metadata = {
@@ -71,6 +72,14 @@ export default function ContactPage() {
 
           <div className="rounded-2xl border border-brand-100 bg-white p-6 shadow-sm lg:col-span-2">
             <ContactForm />
+          </div>
+        </div>
+
+        <div className="mt-10">
+          <h3 className="text-base font-semibold text-brand-950">Find our office</h3>
+          <p className="mt-1 text-sm text-brand-600">{fullAddress}</p>
+          <div className="mt-4 h-[360px] overflow-hidden rounded-2xl border border-brand-100 shadow-sm">
+            <OfficeMapLoader />
           </div>
         </div>
       </Container>

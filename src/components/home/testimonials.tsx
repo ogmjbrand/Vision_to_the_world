@@ -1,59 +1,58 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Star, Quote } from "lucide-react";
+import { useState } from "react";
 import Container from "@/components/ui/container";
-import SectionHeading from "@/components/ui/section-heading";
+import { TestimonialCard, type CardPosition } from "@/components/home/testimonial-card";
 import { testimonials } from "@/lib/data/testimonials";
 import { useLanguage } from "@/components/i18n/language-provider";
 
+function positionFor(depth: number): CardPosition {
+  if (depth === 0) return "front";
+  if (depth === 1) return "middle";
+  if (depth === 2) return "back";
+  return "hidden";
+}
+
 export default function Testimonials() {
   const { t } = useLanguage();
+  const [frontIndex, setFrontIndex] = useState(0);
+
+  function handleShuffle() {
+    setFrontIndex((i) => (i + 1) % testimonials.length);
+  }
 
   return (
-    <section className="bg-brand-50 py-20">
+    <section className="overflow-hidden bg-gradient-to-br from-brand-950 to-brand-900 py-20">
       <Container>
-        <SectionHeading
-          eyebrow={t.testimonials.eyebrow}
-          title={t.testimonials.title}
-          description={t.testimonials.description}
-        />
-
-        <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {testimonials.map((t, i) => (
-            <motion.figure
-              key={t.name}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.4, delay: (i % 3) * 0.08 }}
-              className="flex flex-col rounded-2xl border border-brand-100 bg-white p-6 shadow-sm"
-            >
-              <Quote className="h-6 w-6 text-accent-300" />
-              <div className="mt-3 flex items-center gap-0.5">
-                {Array.from({ length: 5 }).map((_, starIndex) => (
-                  <Star
-                    key={starIndex}
-                    className={`h-4 w-4 ${
-                      starIndex < t.rating
-                        ? "fill-accent-500 text-accent-500"
-                        : "fill-brand-100 text-brand-100"
-                    }`}
-                  />
-                ))}
-              </div>
-              <blockquote className="mt-3 flex-1 text-sm leading-relaxed text-brand-700">
-                &ldquo;{t.quote}&rdquo;
-              </blockquote>
-              <figcaption className="mt-5 border-t border-brand-100 pt-4">
-                <p className="text-sm font-semibold text-brand-950">{t.name}</p>
-                <p className="text-xs text-brand-500">
-                  {t.location} &middot; {t.service}
-                </p>
-              </figcaption>
-            </motion.figure>
-          ))}
+        <div className="mx-auto max-w-2xl text-center">
+          <p className="text-sm font-semibold uppercase tracking-wide text-accent-400">
+            {t.testimonials.eyebrow}
+          </p>
+          <h2 className="mt-2 text-3xl font-bold tracking-tight text-white sm:text-4xl">
+            {t.testimonials.title}
+          </h2>
+          <p className="mt-4 text-lg text-brand-300">{t.testimonials.description}</p>
         </div>
+
+        <div className="mt-16 grid place-content-center">
+          <div className="relative -ml-[75px] h-[420px] w-[300px] sm:-ml-[130px] sm:w-[320px] md:-ml-[160px]">
+            {testimonials.map((testimonial, index) => {
+              const depth = (index - frontIndex + testimonials.length) % testimonials.length;
+              return (
+                <TestimonialCard
+                  key={testimonial.name}
+                  testimonial={testimonial}
+                  position={positionFor(depth)}
+                  handleShuffle={handleShuffle}
+                />
+              );
+            })}
+          </div>
+        </div>
+
+        <p className="mt-8 text-center text-xs text-brand-400">
+          Drag a card to the left for the next story
+        </p>
       </Container>
     </section>
   );
