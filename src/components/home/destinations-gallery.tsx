@@ -3,10 +3,57 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import Container from "@/components/ui/container";
-import { galleryDestinations } from "@/lib/data/gallery";
+import { galleryDestinations, type GalleryDestination } from "@/lib/data/gallery";
+import { usePrefersReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
 
+function GalleryMedia({
+  dest,
+  allowMotion,
+  duration,
+}: {
+  dest: GalleryDestination;
+  allowMotion: boolean;
+  duration: number;
+}) {
+  return (
+    <motion.div
+      className="absolute inset-0"
+      animate={allowMotion ? { scale: [1, 1.12, 1] } : undefined}
+      transition={
+        allowMotion
+          ? { duration, repeat: Infinity, ease: "easeInOut" }
+          : undefined
+      }
+    >
+      {dest.video && allowMotion ? (
+        <video
+          className="h-full w-full object-cover"
+          src={dest.video}
+          poster={dest.image}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="none"
+        />
+      ) : (
+        <Image
+          src={dest.image}
+          alt={dest.title}
+          fill
+          sizes="(min-width: 640px) 25vw, 50vw"
+          className="object-cover"
+        />
+      )}
+    </motion.div>
+  );
+}
+
 export default function DestinationsGallery() {
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const allowMotion = !prefersReducedMotion;
+
   return (
     <section className="bg-brand-950 py-20">
       <Container>
@@ -37,18 +84,21 @@ export default function DestinationsGallery() {
                 dest.span === "tall" && "row-span-2",
               )}
             >
-              <Image
-                src={dest.image}
-                alt={dest.title}
-                fill
-                sizes="(min-width: 640px) 25vw, 50vw"
-                className="object-cover transition-transform duration-700 group-hover:scale-110"
+              <GalleryMedia
+                dest={dest}
+                allowMotion={allowMotion}
+                duration={18 + (i % 3) * 4}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent transition-opacity duration-300 group-hover:from-black/80" />
               <div className="absolute inset-x-0 bottom-0 p-4">
                 <p className="text-sm font-semibold text-white">{dest.title}</p>
                 <p className="text-xs text-brand-200">{dest.location}</p>
               </div>
+              {dest.video && allowMotion && (
+                <span className="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-black/40 backdrop-blur-sm">
+                  <span className="h-2 w-2 rounded-full bg-accent-400" />
+                </span>
+              )}
             </motion.div>
           ))}
         </div>

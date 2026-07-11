@@ -4,5 +4,6 @@ import { en } from "@/lib/i18n/dictionaries/en";
 import { es } from "@/lib/i18n/dictionaries/es";
 import { fr } from "@/lib/i18n/dictionaries/fr";
 import { pt } from "@/lib/i18n/dictionaries/pt";
+import { ar } from "@/lib/i18n/dictionaries/ar";
 
-export const dictionaries: Record<LanguageCode, Dictionary> = { en, es, fr, pt };
+export const dictionaries: Record<LanguageCode, Dictionary> = { en, es, fr, pt, ar };

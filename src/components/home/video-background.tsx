@@ -1,26 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useSyncExternalStore } from "react";
-
-const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
-
-function subscribe(callback: () => void) {
-  const query = window.matchMedia(REDUCED_MOTION_QUERY);
-  query.addEventListener("change", callback);
-  return () => query.removeEventListener("change", callback);
-}
-
-function getSnapshot() {
-  return window.matchMedia(REDUCED_MOTION_QUERY).matches;
-}
-
-function getServerSnapshot() {
-  return true;
-}
+import { useEffect, useRef } from "react";
+import { usePrefersReducedMotion } from "@/lib/hooks/use-reduced-motion";
 
 export default function VideoBackground({ src, poster }: { src: string; poster?: string }) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const prefersReducedMotion = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const prefersReducedMotion = usePrefersReducedMotion();
   const allowMotion = !prefersReducedMotion;
 
   useEffect(() => {

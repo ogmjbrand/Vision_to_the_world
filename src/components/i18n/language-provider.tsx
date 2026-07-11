@@ -1,7 +1,7 @@
 "use client";
 
-import { createContext, useContext, useMemo, useSyncExternalStore, type ReactNode } from "react";
-import { defaultLanguage, isLanguageCode, type LanguageCode } from "@/lib/i18n/languages";
+import { createContext, useContext, useEffect, useMemo, useSyncExternalStore, type ReactNode } from "react";
+import { defaultLanguage, getLanguageDir, isLanguageCode, type LanguageCode } from "@/lib/i18n/languages";
 import { dictionaries } from "@/lib/i18n/dictionaries";
 import type { Dictionary } from "@/lib/i18n/types";
 
@@ -38,7 +38,6 @@ function setLanguage(lang: LanguageCode) {
   currentLang = lang;
   if (typeof window !== "undefined") {
     window.localStorage.setItem(STORAGE_KEY, lang);
-    document.documentElement.lang = lang;
   }
   listeners.forEach((listener) => listener());
 }
@@ -47,15 +46,23 @@ type LanguageContextValue = {
   lang: LanguageCode;
   setLang: (lang: LanguageCode) => void;
   t: Dictionary;
+  dir: "ltr" | "rtl";
 };
 
 const LanguageContext = createContext<LanguageContextValue | null>(null);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const lang = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const dir = getLanguageDir(lang);
+
+  useEffect(() => {
+    document.documentElement.lang = lang;
+    document.documentElement.dir = dir;
+  }, [lang, dir]);
+
   const value = useMemo(
-    () => ({ lang, setLang: setLanguage, t: dictionaries[lang] }),
-    [lang],
+    () => ({ lang, setLang: setLanguage, t: dictionaries[lang], dir }),
+    [lang, dir],
   );
 
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;

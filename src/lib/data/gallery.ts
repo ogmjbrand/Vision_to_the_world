@@ -3,6 +3,7 @@ export type GalleryDestination = {
   title: string;
   location: string;
   image: string;
+  video?: string;
   span?: "wide" | "tall";
 };
 
@@ -25,6 +26,7 @@ export const galleryDestinations: GalleryDestination[] = [
     title: "All seven wonders in one view",
     location: "Giza, Egypt",
     image: "/media/gallery/egypt-pyramids-panorama.jpg",
+    video: "/media/hero/hero-clip-2.mp4",
     span: "wide",
   },
   {
@@ -51,6 +53,7 @@ export const galleryDestinations: GalleryDestination[] = [
     title: "Golden hour over the vines",
     location: "Lakeside Vineyards",
     image: "/media/gallery/vineyard-lake-sunset.jpg",
+    video: "/media/hero/hero-clip-1.mp4",
   },
   {
     slug: "camel-caravan",
