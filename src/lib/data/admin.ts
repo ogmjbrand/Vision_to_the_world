@@ -18,9 +18,9 @@ export const mockCustomers: Customer[] = [
 export type AdminBooking = {
   id: string;
   customer: string;
-  type: "Flight" | "Hotel" | "Car Rental" | "Package" | "Transfer";
+  type: string;
   date: string;
-  status: "Upcoming" | "Completed" | "Cancelled";
+  status: string;
   amount: number;
   currency: string;
 };
@@ -36,10 +36,10 @@ export const mockAdminBookings: AdminBooking[] = [
 export type AdminPayment = {
   id: string;
   customer: string;
-  gateway: "Stripe" | "PayPal" | "Cash App";
+  gateway: string;
   amount: number;
   currency: string;
-  status: "Paid" | "Refunded" | "Failed";
+  status: string;
   date: string;
 };
 
@@ -70,8 +70,8 @@ export type SupportTicket = {
   id: string;
   customer: string;
   subject: string;
-  priority: "Low" | "Medium" | "High";
-  status: "Open" | "In Progress" | "Resolved";
+  priority: string;
+  status: string;
 };
 
 export const mockTickets: SupportTicket[] = [

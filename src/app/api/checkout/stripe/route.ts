@@ -54,7 +54,13 @@ export async function POST(request: NextRequest) {
       price: String(price),
       currency: currency ?? "USD",
     }).toString()}`,
-    metadata: { type, title, subtotal: String(subtotal), total: String(total) },
+    metadata: {
+      type,
+      title,
+      subtotal: String(subtotal),
+      total: String(total),
+      currency: currency ?? "USD",
+    },
   });
 
   return NextResponse.json({ url: session.url });

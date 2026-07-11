@@ -1,10 +1,22 @@
 import type { Metadata } from "next";
 import { mockCustomers } from "@/lib/data/admin";
 import { formatCurrency } from "@/lib/utils";
+import { createClient, getCurrentUser } from "@/lib/supabase/server";
+import { getCustomerSummary, toDisplayCustomer, withFallback } from "@/lib/supabase/bookings";
 
 export const metadata: Metadata = { title: "Admin · Customers" };
 
-export default function AdminCustomersPage() {
+export default async function AdminCustomersPage() {
+  const user = await getCurrentUser();
+  const supabase = await createClient();
+
+  const { data: rawCustomers, usedFallback } =
+    supabase && user
+      ? await withFallback(getCustomerSummary(supabase), [])
+      : { data: [], usedFallback: true };
+
+  const customers = usedFallback ? mockCustomers : rawCustomers.map(toDisplayCustomer);
+
   return (
     <div>
       <h1 className="text-2xl font-bold text-brand-950">Customers</h1>
@@ -24,7 +36,7 @@ export default function AdminCustomersPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-brand-100">
-            {mockCustomers.map((c) => (
+            {customers.map((c) => (
               <tr key={c.id}>
                 <td className="px-5 py-4">
                   <p className="font-medium text-brand-950">{c.name}</p>

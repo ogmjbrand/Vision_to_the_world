@@ -2,10 +2,22 @@ import type { Metadata } from "next";
 import StatusBadge from "@/components/dashboard/status-badge";
 import { mockAdminBookings } from "@/lib/data/admin";
 import { formatCurrency } from "@/lib/utils";
+import { createClient, getCurrentUser } from "@/lib/supabase/server";
+import { getAllBookings, toAdminDisplayBooking, withFallback } from "@/lib/supabase/bookings";
 
 export const metadata: Metadata = { title: "Admin · Bookings" };
 
-export default function AdminBookingsPage() {
+export default async function AdminBookingsPage() {
+  const user = await getCurrentUser();
+  const supabase = await createClient();
+
+  const { data: rawBookings, usedFallback } =
+    supabase && user
+      ? await withFallback(getAllBookings(supabase, 100), [])
+      : { data: [], usedFallback: true };
+
+  const bookings = usedFallback ? mockAdminBookings : rawBookings.map(toAdminDisplayBooking);
+
   return (
     <div>
       <h1 className="text-2xl font-bold text-brand-950">Bookings</h1>
@@ -26,7 +38,7 @@ export default function AdminBookingsPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-brand-100">
-            {mockAdminBookings.map((b) => (
+            {bookings.map((b) => (
               <tr key={b.id}>
                 <td className="px-5 py-4 font-medium text-brand-950">{b.id}</td>
                 <td className="px-5 py-4 text-brand-700">{b.customer}</td>

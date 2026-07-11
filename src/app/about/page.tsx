@@ -4,6 +4,7 @@ import Container from "@/components/ui/container";
 import SectionHeading from "@/components/ui/section-heading";
 import MissionVision from "@/components/home/mission-vision";
 import CTA from "@/components/home/cta";
+import VideoBackground from "@/components/home/video-background";
 
 export const metadata: Metadata = {
   title: "About Us",
@@ -23,8 +24,12 @@ const audiences = [
 export default function AboutPage() {
   return (
     <>
-      <section className="bg-gradient-to-br from-brand-950 to-brand-800 py-16 sm:py-20">
-        <Container>
+      <section className="relative overflow-hidden bg-brand-950 py-16 sm:py-20">
+        <VideoBackground
+          src="/media/hero/hero-clip-2.mp4"
+          poster="/media/gallery/egypt-pyramids-panorama.jpg"
+        />
+        <Container className="relative">
           <div className="max-w-2xl">
             <span className="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-accent-200 ring-1 ring-white/20">
               About Vision To The World

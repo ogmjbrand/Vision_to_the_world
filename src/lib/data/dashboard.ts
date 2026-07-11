@@ -1,9 +1,9 @@
 export type Booking = {
   id: string;
-  type: "Flight" | "Hotel" | "Car Rental" | "Package";
+  type: string;
   title: string;
   date: string;
-  status: "Upcoming" | "Completed" | "Cancelled";
+  status: string;
   amount: number;
   currency: string;
 };

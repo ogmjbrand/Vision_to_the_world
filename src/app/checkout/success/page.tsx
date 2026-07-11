@@ -5,6 +5,8 @@ import Container from "@/components/ui/container";
 import { LinkButton } from "@/components/ui/button";
 import { getStripeClient } from "@/lib/stripe/server";
 import { formatCurrency } from "@/lib/utils";
+import { createClient, getCurrentUser } from "@/lib/supabase/server";
+import { findBookingByStripeSession, recordPaidBooking } from "@/lib/supabase/bookings";
 
 export const metadata: Metadata = { title: "Booking Confirmed" };
 
@@ -28,8 +30,30 @@ export default async function CheckoutSuccessPage({
         title = (session.metadata?.title as string | undefined) ?? undefined;
         amount = session.amount_total ? session.amount_total / 100 : undefined;
         currency = session.currency?.toUpperCase();
+
+        const user = await getCurrentUser();
+        const supabase = await createClient();
+        const meta = session.metadata;
+
+        if (user && supabase && meta?.type && meta.title && meta.subtotal) {
+          const existing = await findBookingByStripeSession(supabase, sessionId);
+          if (!existing) {
+            await recordPaidBooking(supabase, {
+              userId: user.id,
+              item: {
+                type: meta.type,
+                title: meta.title,
+                price: Number(meta.subtotal),
+                currency: meta.currency ?? "USD",
+              },
+              gateway: "stripe",
+              gatewayReference: sessionId,
+              stripeSessionId: sessionId,
+            });
+          }
+        }
       } catch {
-        // Session lookup failed — still show a generic confirmation below.
+        // Session lookup or booking insert failed — still show a generic confirmation below.
       }
     }
   }

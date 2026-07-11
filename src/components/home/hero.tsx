@@ -1,13 +1,13 @@
 import SearchWidget from "@/components/search/search-widget";
 import Container from "@/components/ui/container";
+import VideoBackground from "@/components/home/video-background";
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-brand-950 via-brand-900 to-brand-700">
-      <div className="bg-grid absolute inset-0 opacity-40" aria-hidden />
-      <div
-        className="absolute -right-24 -top-24 h-96 w-96 rounded-full bg-accent-500/20 blur-3xl"
-        aria-hidden
+    <section className="relative overflow-hidden bg-brand-950">
+      <VideoBackground
+        src="/media/hero/hero-clip-1.mp4"
+        poster="/media/gallery/vineyard-lake-sunset.jpg"
       />
       <Container className="relative py-20 sm:py-28">
         <div className="max-w-2xl">

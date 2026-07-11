@@ -5,6 +5,7 @@ import { parseCheckoutItem, computeOrderTotals } from "@/lib/checkout";
 import { isStripeConfigured } from "@/lib/stripe/config";
 import { formatCurrency } from "@/lib/utils";
 import { siteConfig } from "@/lib/data/site-config";
+import { getCurrentUser } from "@/lib/supabase/server";
 import StripeButton from "@/components/checkout/stripe-button";
 import PayPalButton from "@/components/checkout/paypal-button";
 import CashAppPayment from "@/components/checkout/cashapp-payment";
@@ -34,6 +35,7 @@ export default async function CheckoutPage({
   }
 
   const { subtotal, serviceFee, total } = computeOrderTotals(item.price);
+  const user = await getCurrentUser();
 
   return (
     <Container className="py-12">
@@ -67,8 +69,13 @@ export default async function CheckoutPage({
 
         <div className="mt-6 space-y-3">
           <StripeButton item={item} configured={isStripeConfigured} />
-          <PayPalButton item={item} />
-          <CashAppPayment cashtag={siteConfig.cashAppTag} total={total} />
+          <PayPalButton item={item} userId={user?.id} />
+          <CashAppPayment
+            cashtag={siteConfig.cashAppTag}
+            total={total}
+            item={item}
+            userId={user?.id}
+          />
         </div>
 
         <p className="mt-6 text-center text-xs text-brand-400">

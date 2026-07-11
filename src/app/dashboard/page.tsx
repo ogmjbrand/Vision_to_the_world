@@ -5,12 +5,24 @@ import StatCard from "@/components/dashboard/stat-card";
 import StatusBadge from "@/components/dashboard/status-badge";
 import { mockBookings } from "@/lib/data/dashboard";
 import { formatCurrency } from "@/lib/utils";
+import { createClient, getCurrentUser } from "@/lib/supabase/server";
+import { getUserBookings, withFallback, toDisplayBooking } from "@/lib/supabase/bookings";
 
 export const metadata: Metadata = { title: "My Dashboard" };
 
-export default function DashboardPage() {
-  const upcoming = mockBookings.filter((b) => b.status === "Upcoming");
-  const totalSpent = mockBookings.reduce((sum, b) => sum + b.amount, 0);
+export default async function DashboardPage() {
+  const user = await getCurrentUser();
+  const supabase = await createClient();
+
+  const { data: rawBookings, usedFallback } =
+    supabase && user
+      ? await withFallback(getUserBookings(supabase, user.id), [])
+      : { data: [], usedFallback: false };
+
+  const bookings = user && !usedFallback ? rawBookings.map(toDisplayBooking) : mockBookings;
+
+  const upcomingCount = bookings.filter((b) => b.status === "Upcoming").length;
+  const totalSpent = bookings.reduce((sum, b) => sum + b.amount, 0);
 
   return (
     <div>
@@ -20,8 +32,8 @@ export default function DashboardPage() {
       </p>
 
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <StatCard icon={CalendarCheck} label="Upcoming trips" value={String(upcoming.length)} />
-        <StatCard icon={Plane} label="Total bookings" value={String(mockBookings.length)} />
+        <StatCard icon={CalendarCheck} label="Upcoming trips" value={String(upcomingCount)} />
+        <StatCard icon={Plane} label="Total bookings" value={String(bookings.length)} />
         <StatCard icon={Wallet} label="Total spent" value={formatCurrency(totalSpent)} />
       </div>
 
@@ -37,28 +49,37 @@ export default function DashboardPage() {
             View all <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </div>
-        <div className="divide-y divide-brand-100">
-          {mockBookings.slice(0, 4).map((b) => (
-            <div
-              key={b.id}
-              className="flex items-center justify-between gap-4 p-5"
-            >
-              <div>
-                <p className="text-sm font-semibold text-brand-950">{b.title}</p>
-                <p className="mt-0.5 text-xs text-brand-500">
-                  {b.type} · {b.date} · {b.id}
-                </p>
+        {bookings.length === 0 ? (
+          <p className="p-5 text-sm text-brand-600">
+            No bookings yet — start a search and book your first trip.
+          </p>
+        ) : (
+          <div className="divide-y divide-brand-100">
+            {bookings.slice(0, 4).map((b) => (
+              <div key={b.id} className="flex items-center justify-between gap-4 p-5">
+                <div>
+                  <p className="text-sm font-semibold text-brand-950">{b.title}</p>
+                  <p className="mt-0.5 text-xs text-brand-500">
+                    {b.type} · {b.date} · {b.id}
+                  </p>
+                </div>
+                <div className="flex items-center gap-4">
+                  <StatusBadge status={b.status} />
+                  <p className="w-20 text-right text-sm font-semibold text-brand-950">
+                    {formatCurrency(b.amount, b.currency)}
+                  </p>
+                </div>
               </div>
-              <div className="flex items-center gap-4">
-                <StatusBadge status={b.status} />
-                <p className="w-20 text-right text-sm font-semibold text-brand-950">
-                  {formatCurrency(b.amount, b.currency)}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
+
+      {!user && (
+        <p className="mt-4 text-center text-xs text-brand-400">
+          Showing sample data — log in to see your real bookings.
+        </p>
+      )}
     </div>
   );
 }

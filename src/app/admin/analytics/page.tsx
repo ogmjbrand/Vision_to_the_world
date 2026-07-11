@@ -3,11 +3,31 @@ import StatCard from "@/components/dashboard/stat-card";
 import { Wallet, CalendarCheck, Users, TrendingUp } from "lucide-react";
 import { analyticsSummary } from "@/lib/data/admin";
 import { formatCurrency } from "@/lib/utils";
+import { createClient, getCurrentUser } from "@/lib/supabase/server";
+import { getAdminStats, getMonthlyRevenue } from "@/lib/supabase/bookings";
 
 export const metadata: Metadata = { title: "Admin · Analytics" };
 
-export default function AdminAnalyticsPage() {
-  const max = Math.max(...analyticsSummary.monthlyRevenue.map((m) => m.value));
+export default async function AdminAnalyticsPage() {
+  const user = await getCurrentUser();
+  const supabase = await createClient();
+
+  const [stats, monthly] =
+    supabase && user
+      ? await Promise.all([getAdminStats(supabase), getMonthlyRevenue(supabase)])
+      : [null, null];
+
+  const displayStats = stats ?? {
+    totalRevenue: analyticsSummary.totalRevenue,
+    totalBookings: analyticsSummary.totalBookings,
+    activeCustomers: analyticsSummary.activeCustomers,
+  };
+  const monthlyRevenue = monthly ?? analyticsSummary.monthlyRevenue;
+  const max = Math.max(1, ...monthlyRevenue.map((m) => m.value));
+  const avgBookingValue =
+    displayStats.totalBookings > 0
+      ? Math.round(displayStats.totalRevenue / displayStats.totalBookings)
+      : 0;
 
   return (
     <div>
@@ -17,10 +37,10 @@ export default function AdminAnalyticsPage() {
       </p>
 
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard icon={Wallet} label="Total revenue" value={formatCurrency(analyticsSummary.totalRevenue)} />
-        <StatCard icon={CalendarCheck} label="Total bookings" value={String(analyticsSummary.totalBookings)} />
-        <StatCard icon={Users} label="Active customers" value={String(analyticsSummary.activeCustomers)} />
-        <StatCard icon={TrendingUp} label="Avg. booking value" value={formatCurrency(Math.round(analyticsSummary.totalRevenue / analyticsSummary.totalBookings))} />
+        <StatCard icon={Wallet} label="Total revenue" value={formatCurrency(displayStats.totalRevenue)} />
+        <StatCard icon={CalendarCheck} label="Total bookings" value={String(displayStats.totalBookings)} />
+        <StatCard icon={Users} label="Active customers" value={String(displayStats.activeCustomers)} />
+        <StatCard icon={TrendingUp} label="Avg. booking value" value={formatCurrency(avgBookingValue)} />
       </div>
 
       <div className="mt-8 rounded-2xl border border-brand-100 bg-white p-6 shadow-sm">
@@ -28,7 +48,7 @@ export default function AdminAnalyticsPage() {
           Monthly revenue
         </h2>
         <div className="mt-6 flex h-56 items-end gap-4">
-          {analyticsSummary.monthlyRevenue.map((m) => (
+          {monthlyRevenue.map((m) => (
             <div key={m.month} className="flex flex-1 flex-col items-center gap-2">
               <div className="flex h-full w-full items-end">
                 <div
@@ -42,6 +62,13 @@ export default function AdminAnalyticsPage() {
           ))}
         </div>
       </div>
+
+      {!stats && (
+        <p className="mt-4 text-center text-xs text-brand-400">
+          Showing sample data — you need admin access (profiles.role =
+          &apos;admin&apos;) to see live platform data.
+        </p>
+      )}
     </div>
   );
 }

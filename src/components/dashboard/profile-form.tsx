@@ -11,10 +11,12 @@ const inputClass =
 const labelClass = "mb-1 block text-xs font-semibold text-brand-600";
 
 export default function ProfileForm({
+  userId,
   email,
   fullName,
   phone,
 }: {
+  userId?: string;
   email?: string;
   fullName?: string;
   phone?: string;
@@ -26,7 +28,7 @@ export default function ProfileForm({
     e.preventDefault();
     setMessage(null);
 
-    if (!isSupabaseConfigured) {
+    if (!isSupabaseConfigured || !userId) {
       setMessage("Profile changes require Supabase to be configured.");
       return;
     }
@@ -34,17 +36,22 @@ export default function ProfileForm({
     setLoading(true);
 
     const data = new FormData(e.currentTarget);
+    const newFullName = String(data.get("fullName") ?? "");
+    const newPhone = String(data.get("phone") ?? "");
     const supabase = createClient();
 
-    const { error } = await supabase.auth.updateUser({
-      data: {
-        full_name: String(data.get("fullName") ?? ""),
-        phone: String(data.get("phone") ?? ""),
-      },
-    });
+    const [{ error: authError }, { error: profileError }] = await Promise.all([
+      supabase.auth.updateUser({ data: { full_name: newFullName, phone: newPhone } }),
+      supabase
+        .from("profiles")
+        .update({ full_name: newFullName, phone: newPhone, updated_at: new Date().toISOString() })
+        .eq("id", userId),
+    ]);
 
     setLoading(false);
-    setMessage(error ? error.message : "Profile updated successfully.");
+    setMessage(
+      authError?.message ?? profileError?.message ?? "Profile updated successfully.",
+    );
   }
 
   return (

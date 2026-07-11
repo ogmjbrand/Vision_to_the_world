@@ -4,6 +4,8 @@ import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import type { CheckoutItem } from "@/lib/checkout";
 import { computeOrderTotals } from "@/lib/checkout";
+import { createClient } from "@/lib/supabase/client";
+import { recordPaidBooking } from "@/lib/supabase/bookings";
 
 declare global {
   interface Window {
@@ -17,7 +19,13 @@ declare global {
 
 const PAYPAL_CLIENT_ID = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID;
 
-export default function PayPalButton({ item }: { item: CheckoutItem }) {
+export default function PayPalButton({
+  item,
+  userId,
+}: {
+  item: CheckoutItem;
+  userId?: string;
+}) {
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
@@ -42,9 +50,20 @@ export default function PayPalButton({ item }: { item: CheckoutItem }) {
             ],
           }),
         onApprove: async (_data: unknown, actions: {
-          order: { capture: () => Promise<unknown> };
+          order: { capture: () => Promise<{ id?: string }> };
         }) => {
-          await actions.order.capture();
+          const details = await actions.order.capture();
+
+          if (userId) {
+            const supabase = createClient();
+            await recordPaidBooking(supabase, {
+              userId,
+              item,
+              gateway: "paypal",
+              gatewayReference: details?.id,
+            });
+          }
+
           router.push("/checkout/success?method=paypal");
         },
       }).render("#paypal-button-container");
@@ -65,7 +84,7 @@ export default function PayPalButton({ item }: { item: CheckoutItem }) {
     } else {
       script.addEventListener("load", renderButtons);
     }
-  }, [item, router]);
+  }, [item, router, userId]);
 
   if (!PAYPAL_CLIENT_ID) {
     return (

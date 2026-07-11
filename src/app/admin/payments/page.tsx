@@ -2,16 +2,29 @@ import type { Metadata } from "next";
 import { cn } from "@/lib/utils";
 import { mockPayments } from "@/lib/data/admin";
 import { formatCurrency } from "@/lib/utils";
+import { createClient, getCurrentUser } from "@/lib/supabase/server";
+import { getAllPayments, toAdminDisplayPayment, withFallback } from "@/lib/supabase/bookings";
 
 export const metadata: Metadata = { title: "Admin · Payments" };
 
 const statusStyles: Record<string, string> = {
   Paid: "bg-green-100 text-green-700",
+  Pending: "bg-accent-100 text-accent-700",
   Refunded: "bg-brand-100 text-brand-700",
   Failed: "bg-red-100 text-red-700",
 };
 
-export default function AdminPaymentsPage() {
+export default async function AdminPaymentsPage() {
+  const user = await getCurrentUser();
+  const supabase = await createClient();
+
+  const { data: rawPayments, usedFallback } =
+    supabase && user
+      ? await withFallback(getAllPayments(supabase, 100), [])
+      : { data: [], usedFallback: true };
+
+  const payments = usedFallback ? mockPayments : rawPayments.map(toAdminDisplayPayment);
+
   return (
     <div>
       <h1 className="text-2xl font-bold text-brand-950">Payments</h1>
@@ -32,7 +45,7 @@ export default function AdminPaymentsPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-brand-100">
-            {mockPayments.map((p) => (
+            {payments.map((p) => (
               <tr key={p.id}>
                 <td className="px-5 py-4 font-medium text-brand-950">{p.id}</td>
                 <td className="px-5 py-4 text-brand-700">{p.customer}</td>
@@ -42,7 +55,7 @@ export default function AdminPaymentsPage() {
                   <span
                     className={cn(
                       "inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold",
-                      statusStyles[p.status],
+                      statusStyles[p.status] ?? "bg-brand-100 text-brand-700",
                     )}
                   >
                     {p.status}

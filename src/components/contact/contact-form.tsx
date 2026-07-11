@@ -3,6 +3,8 @@
 import { useState, type FormEvent } from "react";
 import { Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { createClient } from "@/lib/supabase/client";
+import { isSupabaseConfigured } from "@/lib/supabase/config";
 
 const inputClass =
   "w-full rounded-lg border border-brand-200 bg-white px-3.5 py-2.5 text-sm text-brand-950 placeholder:text-brand-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200";
@@ -11,12 +13,45 @@ const labelClass = "mb-1 block text-xs font-semibold text-brand-600";
 export default function ContactForm() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setError(null);
     setLoading(true);
-    // No backend wired yet — this simulates submission until the support
-    // request endpoint is connected to Supabase.
+
+    const data = new FormData(e.currentTarget);
+    const name = String(data.get("name") ?? "");
+    const email = String(data.get("email") ?? "");
+    const subject = String(data.get("subject") ?? "general");
+    const message = String(data.get("message") ?? "");
+
+    if (isSupabaseConfigured) {
+      const supabase = createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      const { error: insertError } = await supabase.from("support_tickets").insert({
+        user_id: user?.id ?? null,
+        name,
+        email,
+        subject,
+        message,
+      });
+
+      setLoading(false);
+
+      if (insertError) {
+        setError("Something went wrong sending your message. Please try again.");
+        return;
+      }
+
+      setSubmitted(true);
+      return;
+    }
+
+    // No backend configured — simulate submission so the form still feels responsive.
     setTimeout(() => {
       setLoading(false);
       setSubmitted(true);
@@ -67,6 +102,11 @@ export default function ContactForm() {
           placeholder="Tell us about your trip or question..."
         />
       </div>
+
+      {error && (
+        <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>
+      )}
+
       <Button type="submit" disabled={loading} className="w-fit">
         <Send className="h-4 w-4" />
         {loading ? "Sending..." : "Send message"}
