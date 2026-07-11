@@ -26,7 +26,7 @@ export default function RefundPolicyPage() {
 
       <LegalSection title="2. Service Fee">
         <p>
-          The 5% service fee charged at checkout covers platform operations, payment processing, and
+          The 10% service fee charged at checkout covers platform operations, payment processing, and
           booking support. It is non-refundable once a booking has been confirmed with the supplier, even
           if the underlying booking is later cancelled or refunded.
         </p>

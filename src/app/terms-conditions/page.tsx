@@ -37,7 +37,7 @@ export default function TermsConditionsPage() {
       <LegalSection title="3. Bookings & Pricing">
         <ul className="list-disc space-y-1 pl-5">
           <li>Prices displayed are sourced from third-party suppliers in real time and can change until a booking is confirmed and paid for.</li>
-          <li>A service fee of 5% is added to the supplier price at checkout to cover platform operations and support. This fee is disclosed before payment.</li>
+          <li>A service fee of 10% is added to the supplier price at checkout to cover platform operations and support. This fee is disclosed before payment.</li>
           <li>Once a payment is confirmed, your booking is subject to the cancellation, change, and refund policy of the relevant airline, hotel, or supplier, in addition to our own <a href="/refund-policy" className="font-medium text-accent-600">Refund Policy</a>.</li>
           <li>You are responsible for reviewing all booking details (names, dates, destinations) before completing payment, as many suppliers restrict or charge for changes after confirmation.</li>
         </ul>

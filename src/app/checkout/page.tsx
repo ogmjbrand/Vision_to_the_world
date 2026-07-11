@@ -57,7 +57,7 @@ export default async function CheckoutPage({
               <dd className="text-brand-900">{formatCurrency(subtotal, item.currency)}</dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-brand-600">Service fee (5%)</dt>
+              <dt className="text-brand-600">Service fee (10%)</dt>
               <dd className="text-brand-900">{formatCurrency(serviceFee, item.currency)}</dd>
             </div>
             <div className="flex justify-between border-t border-brand-100 pt-2 text-base font-bold">

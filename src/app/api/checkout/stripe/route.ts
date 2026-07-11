@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
         price_data: {
           currency: (currency ?? "usd").toLowerCase(),
           unit_amount: Math.round(serviceFee * 100),
-          product_data: { name: "Vision To The World service fee (5%)" },
+          product_data: { name: "Vision To The World service fee (10%)" },
         },
         quantity: 1,
       },

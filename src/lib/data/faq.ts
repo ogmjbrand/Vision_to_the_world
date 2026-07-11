@@ -38,7 +38,7 @@ export const faqs: FaqCategory[] = [
           "We accept Stripe (credit/debit cards), PayPal, and Cash App. Card and PayPal payments confirm instantly; Cash App payments are confirmed manually by our team within one business day.",
       },
       {
-        question: "Why is there a 5% service fee?",
+        question: "Why is there a 10% service fee?",
         answer:
           "The service fee covers platform operations, secure payment processing, and customer support, and is shown clearly before you pay — there are no hidden charges.",
       },
@@ -60,7 +60,7 @@ export const faqs: FaqCategory[] = [
       {
         question: "How long do refunds take?",
         answer:
-          "Once a refund is approved by the supplier, Stripe and PayPal refunds typically post within 5–10 business days. The 5% service fee is non-refundable once a booking is confirmed.",
+          "Once a refund is approved by the supplier, Stripe and PayPal refunds typically post within 5–10 business days. The 10% service fee is non-refundable once a booking is confirmed.",
       },
     ],
   },
