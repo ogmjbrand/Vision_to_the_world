@@ -22,9 +22,11 @@ const PAYPAL_CLIENT_ID = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID;
 export default function PayPalButton({
   item,
   userId,
+  userEmail,
 }: {
   item: CheckoutItem;
   userId?: string;
+  userEmail?: string;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -64,6 +66,22 @@ export default function PayPalButton({
             });
           }
 
+          if (userEmail) {
+            fetch("/api/notifications/booking-confirmation", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                to: userEmail,
+                title: item.title,
+                type: item.type,
+                total,
+                currency: item.currency,
+              }),
+            }).catch(() => {
+              // Booking already recorded — a failed confirmation email shouldn't block checkout.
+            });
+          }
+
           router.push("/checkout/success?method=paypal");
         },
       }).render("#paypal-button-container");
@@ -84,7 +102,7 @@ export default function PayPalButton({
     } else {
       script.addEventListener("load", renderButtons);
     }
-  }, [item, router, userId]);
+  }, [item, router, userId, userEmail]);
 
   if (!PAYPAL_CLIENT_ID) {
     return (

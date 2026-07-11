@@ -40,22 +40,23 @@ export default function ContactForm() {
         message,
       });
 
-      setLoading(false);
-
       if (insertError) {
+        setLoading(false);
         setError("Something went wrong sending your message. Please try again.");
         return;
       }
-
-      setSubmitted(true);
-      return;
     }
 
-    // No backend configured — simulate submission so the form still feels responsive.
-    setTimeout(() => {
-      setLoading(false);
-      setSubmitted(true);
-    }, 600);
+    fetch("/api/notifications/contact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, subject, message }),
+    }).catch(() => {
+      // The support ticket is already recorded — a failed email shouldn't block the form.
+    });
+
+    setLoading(false);
+    setSubmitted(true);
   }
 
   if (submitted) {

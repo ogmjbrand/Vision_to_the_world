@@ -7,6 +7,7 @@ import { getStripeClient } from "@/lib/stripe/server";
 import { formatCurrency } from "@/lib/utils";
 import { createClient, getCurrentUser } from "@/lib/supabase/server";
 import { findBookingByStripeSession, recordPaidBooking } from "@/lib/supabase/bookings";
+import { sendBookingConfirmationEmail } from "@/lib/resend/emails";
 
 export const metadata: Metadata = { title: "Booking Confirmed" };
 
@@ -50,6 +51,16 @@ export default async function CheckoutSuccessPage({
               gatewayReference: sessionId,
               stripeSessionId: sessionId,
             });
+
+            if (user.email) {
+              await sendBookingConfirmationEmail({
+                to: user.email,
+                title: meta.title,
+                type: meta.type,
+                total: Number(meta.total ?? meta.subtotal),
+                currency: meta.currency ?? "USD",
+              });
+            }
           }
         }
       } catch {

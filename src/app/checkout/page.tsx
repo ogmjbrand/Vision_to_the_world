@@ -69,7 +69,7 @@ export default async function CheckoutPage({
 
         <div className="mt-6 space-y-3">
           <StripeButton item={item} configured={isStripeConfigured} />
-          <PayPalButton item={item} userId={user?.id} />
+          <PayPalButton item={item} userId={user?.id} userEmail={user?.email} />
           <CashAppPayment
             cashtag={siteConfig.cashAppTag}
             total={total}
