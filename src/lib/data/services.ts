@@ -40,6 +40,10 @@ export const services: Service[] = [
       "Secure online booking",
       "Instant e-ticket delivery",
     ],
+    cardVideo: "/media/hero/flight-frankfurt-starry-takeoff.mp4",
+    cardVideoPoster: "/media/hero/flight-frankfurt-starry-takeoff-poster.jpg",
+    heroVideo: "/media/hero/flight-frankfurt-starry-takeoff.mp4",
+    heroVideoPoster: "/media/hero/flight-frankfurt-starry-takeoff-poster.jpg",
   },
   {
     slug: "hotels",
@@ -90,6 +94,10 @@ export const services: Service[] = [
       "Schedule transfers in advance",
       "Track reservation details",
     ],
+    cardVideo: "/media/services/airport-transfer-pickup.mp4",
+    cardVideoPoster: "/media/services/airport-transfer-pickup-poster.jpg",
+    heroVideo: "/media/services/airport-transfer-pickup.mp4",
+    heroVideoPoster: "/media/services/airport-transfer-pickup-poster.jpg",
   },
   {
     slug: "packages",
