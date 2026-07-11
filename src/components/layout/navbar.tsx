@@ -135,7 +135,7 @@ export default function Navbar() {
           ))}
           <div className="my-2 border-t border-brand-100" />
           <div className="px-2 pt-1">
-            <LanguageSwitcher className="w-full [&>button]:w-full [&>button]:justify-center [&>button]:border [&>button]:border-brand-200" />
+            <LanguageSwitcher layout="inline" />
           </div>
           <div className="flex gap-2 px-2 pt-2">
             <Link

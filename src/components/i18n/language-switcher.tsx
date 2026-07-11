@@ -8,9 +8,51 @@ import { cn } from "@/lib/utils";
 
 export default function LanguageSwitcher({
   variant = "light",
+  layout = "dropdown",
   className,
 }: {
   variant?: "light" | "dark";
+  /**
+   * "dropdown" opens an absolutely-positioned menu — only safe inside
+   * containers that don't clip overflow. "inline" renders every language
+   * as a chip in normal document flow, for use inside the mobile menu's
+   * overflow-hidden slide panel where a dropdown would get cut off.
+   */
+  layout?: "dropdown" | "inline";
+  className?: string;
+}) {
+  const { lang, setLang } = useLanguage();
+
+  if (layout === "inline") {
+    return (
+      <div className={cn("flex flex-wrap gap-2", className)}>
+        {languages.map((l) => (
+          <button
+            key={l.code}
+            type="button"
+            onClick={() => setLang(l.code)}
+            className={cn(
+              "rounded-full px-3 py-1.5 text-sm font-medium",
+              l.code === lang
+                ? "bg-brand-950 text-white"
+                : "border border-brand-200 text-brand-700 hover:bg-brand-50",
+            )}
+          >
+            {l.nativeLabel}
+          </button>
+        ))}
+      </div>
+    );
+  }
+
+  return <DropdownLanguageSwitcher variant={variant} className={className} />;
+}
+
+function DropdownLanguageSwitcher({
+  variant,
+  className,
+}: {
+  variant: "light" | "dark";
   className?: string;
 }) {
   const { lang, setLang } = useLanguage();
