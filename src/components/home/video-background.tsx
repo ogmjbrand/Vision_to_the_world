@@ -45,7 +45,7 @@ export default function VideoBackground({
         <img src={poster} alt="" className="h-full w-full object-cover" />
       )}
       {overlay === "glass" ? (
-        <div className="absolute inset-0 border-b border-[rgba(255,255,255,0.2)] bg-[rgba(15,23,42,0.35)] backdrop-blur-[12px] [-webkit-backdrop-filter:blur(12px)]" />
+        <div className="absolute inset-0 border-b border-[rgba(225,240,245,0.2)] bg-[rgba(13,13,13,0.35)] backdrop-blur-[12px] [-webkit-backdrop-filter:blur(12px)]" />
       ) : (
         <div className="absolute inset-0 bg-gradient-to-br from-brand-950/90 via-brand-900/80 to-brand-800/70" />
       )}

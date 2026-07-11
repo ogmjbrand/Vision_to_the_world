@@ -1,58 +1,155 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { ArrowRight, ChevronDown, MapPin } from "lucide-react";
 import SearchWidget from "@/components/search/search-widget";
 import Container from "@/components/ui/container";
-import VideoBackground from "@/components/home/video-background";
 import { useLanguage } from "@/components/i18n/language-provider";
+import { usePrefersReducedMotion } from "@/lib/hooks/use-reduced-motion";
+import { heroSlides } from "@/lib/data/hero-slides";
+import { cn } from "@/lib/utils";
 
-const postcards = [
-  { src: "/media/gallery/egypt-sphinx.jpg", alt: "The Sphinx, Giza, Egypt", rotate: "-rotate-6", top: "top-6", right: "right-8" },
-  { src: "/media/gallery/rainbow-valley.jpg", alt: "Rainbow Valley, open road", rotate: "rotate-3", top: "top-40", right: "right-24" },
-  { src: "/media/gallery/beachfront-dining.jpg", alt: "Beachfront dining, Saffron Beach", rotate: "-rotate-3", top: "top-72", right: "right-4" },
-];
+const SLIDE_DURATION_MS = 7000;
 
 export default function Hero() {
   const { t } = useLanguage();
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const [active, setActive] = useState(0);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+  const parallaxY = useTransform(scrollYProgress, [0, 1], ["0%", prefersReducedMotion ? "0%" : "22%"]);
+
+  useEffect(() => {
+    if (prefersReducedMotion) return;
+    const timer = setInterval(() => {
+      setActive((i) => (i + 1) % heroSlides.length);
+    }, SLIDE_DURATION_MS);
+    return () => clearInterval(timer);
+  }, [prefersReducedMotion]);
+
+  const current = heroSlides[active];
+  const next = heroSlides[(active + 1) % heroSlides.length];
 
   return (
-    <section className="relative overflow-hidden bg-brand-950">
-      <VideoBackground
-        src="/media/hero/hero-clip-1.mp4"
-        poster="/media/gallery/vineyard-lake-sunset.jpg"
-        overlay="glass"
-      />
-
-      <div className="pointer-events-none absolute inset-0 hidden lg:block" aria-hidden>
-        {postcards.map((card) => (
-          <div
-            key={card.src}
-            className={`absolute ${card.top} ${card.right} h-40 w-32 ${card.rotate} overflow-hidden rounded-lg border-2 border-white shadow-2xl`}
+    <section ref={sectionRef} className="relative min-h-[92vh] bg-ink">
+      {/* Full-bleed background carousel */}
+      <motion.div className="absolute inset-0 overflow-hidden" style={{ y: parallaxY }}>
+        <AnimatePresence mode="sync">
+          <motion.div
+            key={current.id}
+            className="absolute inset-0"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.1, ease: "easeInOut" }}
           >
-            <Image src={card.src} alt={card.alt} fill sizes="128px" className="object-cover" />
-          </div>
-        ))}
-      </div>
+            <motion.div
+              className="absolute inset-0"
+              initial={{ scale: 1 }}
+              animate={prefersReducedMotion ? { scale: 1 } : { scale: 1.12 }}
+              transition={{ duration: SLIDE_DURATION_MS / 1000, ease: "linear" }}
+            >
+              <Image
+                src={current.image}
+                alt={current.location}
+                fill
+                priority
+                sizes="100vw"
+                className="object-cover"
+              />
+            </motion.div>
+          </motion.div>
+        </AnimatePresence>
+      </motion.div>
 
-      <Container className="relative py-20 sm:py-28">
-        <div className="max-w-2xl">
-          <span className="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-accent-200 ring-1 ring-white/20 [text-shadow:0_1px_4px_rgba(0,0,0,0.5)]">
-            {t.hero.badge}
+      {/* Glassmorphism overlay */}
+      <div className="absolute inset-0 border-b border-[rgba(225,240,245,0.2)] bg-[rgba(13,13,13,0.35)] backdrop-blur-[12px] [-webkit-backdrop-filter:blur(12px)]" />
+
+      {/* Content */}
+      <Container className="relative flex h-full flex-col justify-center pb-24 pt-28">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+          className="max-w-3xl"
+        >
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-[rgba(225,240,245,0.25)] bg-white/10 px-3 py-1 text-xs font-semibold text-ice [text-shadow:0_1px_4px_rgba(0,0,0,0.5)]">
+            <MapPin className="h-3.5 w-3.5" />
+            {current.location}
           </span>
-          <h1 className="mt-5 text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl [text-shadow:0_2px_10px_rgba(0,0,0,0.55)]">
-            {t.hero.titleLine1}{" "}
-            <span className="text-accent-400">{t.hero.titleLine2}</span>{" "}
+
+          <h1 className="mt-6 text-6xl font-bold leading-[0.95] tracking-tight text-white [text-shadow:0_4px_20px_rgba(0,0,0,0.55)] sm:text-7xl lg:text-8xl">
+            {t.hero.titleLine1}
+            <br />
+            <span className="text-accent-400">{t.hero.titleLine2}</span>
+            <br />
             {t.hero.titleLine3}
           </h1>
-          <p className="mt-5 max-w-xl text-lg text-brand-100 [text-shadow:0_1px_6px_rgba(0,0,0,0.5)]">
+
+          <p className="mt-6 max-w-xl text-lg font-light text-ice/80 [text-shadow:0_1px_6px_rgba(0,0,0,0.5)]">
             {t.hero.subtitle}
           </p>
-        </div>
 
-        <div className="mt-10">
+          <div className="mt-8 flex items-center gap-3">
+            <a
+              href="#search"
+              className="group inline-flex items-center gap-2 rounded-full bg-accent-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-black/20 transition-colors hover:bg-accent-600"
+            >
+              Explore
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </a>
+            <span className="hidden items-center gap-2 text-sm font-medium text-ice/70 sm:flex">
+              <ChevronDown className="h-4 w-4 animate-bounce" />
+              Scroll to search
+            </span>
+          </div>
+        </motion.div>
+
+        <div id="search" className="mt-12 scroll-mt-28">
           <SearchWidget />
         </div>
       </Container>
+
+      {/* Dot pagination */}
+      <div className="absolute bottom-6 left-4 z-10 flex items-center gap-2 sm:left-6 lg:left-8">
+        {heroSlides.map((slide, i) => (
+          <button
+            key={slide.id}
+            type="button"
+            aria-label={`Show ${slide.location}`}
+            onClick={() => setActive(i)}
+            className={cn(
+              "h-2 rounded-full transition-all",
+              i === active ? "w-6 bg-accent-400" : "w-2 bg-white/40 hover:bg-white/70",
+            )}
+          />
+        ))}
+      </div>
+
+      {/* Next-destination preview tile */}
+      <button
+        type="button"
+        onClick={() => setActive((active + 1) % heroSlides.length)}
+        className="group absolute bottom-6 right-4 z-10 hidden h-20 w-32 overflow-hidden rounded-xl border border-white/20 shadow-xl transition-transform hover:-translate-y-1 sm:block sm:right-6 lg:right-8"
+      >
+        <Image
+          src={next.image}
+          alt={next.location}
+          fill
+          sizes="128px"
+          className="object-cover transition-transform duration-500 group-hover:scale-110"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+        <span className="absolute inset-x-0 bottom-1 text-center text-[11px] font-semibold text-white">
+          {next.location}
+        </span>
+      </button>
     </section>
   );
 }

@@ -2,30 +2,39 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #0b1b2b;
+  --foreground: #0d0d0d;
 
-  --color-brand-50: #eef8ff;
-  --color-brand-100: #dcf0fe;
-  --color-brand-200: #b6e2fd;
-  --color-brand-300: #7fccfa;
-  --color-brand-400: #3aabf0;
-  --color-brand-500: #128fd8;
-  --color-brand-600: #0771b4;
-  --color-brand-700: #075b92;
-  --color-brand-800: #0a4a76;
-  --color-brand-900: #0d3c60;
-  --color-brand-950: #082238;
+  /* Exact brand palette anchors — reference these directly for pixel-true fidelity. */
+  --color-ice: #e1f0f5;
+  --color-sky: #5cb3d9;
+  --color-olive: #8b9a3a;
+  --color-olive-dark: #3a4a1a;
+  --color-ink: #0d0d0d;
 
-  --color-accent-50: #fff8ec;
-  --color-accent-100: #ffefd0;
-  --color-accent-200: #ffdc9e;
-  --color-accent-300: #ffc35c;
-  --color-accent-400: #ffab2e;
-  --color-accent-500: #f78e10;
-  --color-accent-600: #db6a08;
-  --color-accent-700: #b64c0a;
-  --color-accent-800: #933b10;
-  --color-accent-900: #783210;
+  /* brand-* : cool ice-blue -> sky-blue -> near-black. Backgrounds, text, borders, dark sections. */
+  --color-brand-50: #e1f0f5;
+  --color-brand-100: #cfe7ef;
+  --color-brand-200: #b0d8e5;
+  --color-brand-300: #86c4d6;
+  --color-brand-400: #5cb3d9;
+  --color-brand-500: #4998bd;
+  --color-brand-600: #397c9b;
+  --color-brand-700: #2c6079;
+  --color-brand-800: #1f4356;
+  --color-brand-900: #142a38;
+  --color-brand-950: #0d0d0d;
+
+  /* accent-* : olive/chartreuse -> dark olive green. CTAs, highlights, ratings. */
+  --color-accent-50: #f5f6e9;
+  --color-accent-100: #ecefd2;
+  --color-accent-200: #dfe3b0;
+  --color-accent-300: #cdd489;
+  --color-accent-400: #b0bc5f;
+  --color-accent-500: #8b9a3a;
+  --color-accent-600: #778632;
+  --color-accent-700: #63722a;
+  --color-accent-800: #4f5e22;
+  --color-accent-900: #3a4a1a;
 }
 
 @theme inline {
@@ -33,6 +42,12 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-body);
   --font-heading: var(--font-heading);
+
+  --color-ice: var(--color-ice);
+  --color-sky: var(--color-sky);
+  --color-olive: var(--color-olive);
+  --color-olive-dark: var(--color-olive-dark);
+  --color-ink: var(--color-ink);
 
   --color-brand-50: var(--color-brand-50);
   --color-brand-100: var(--color-brand-100);

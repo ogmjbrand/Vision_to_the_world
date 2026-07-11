@@ -3,8 +3,8 @@ import { RESEND_FROM_EMAIL } from "@/lib/resend/config";
 import { siteConfig, siteUrl } from "@/lib/data/site-config";
 import { formatCurrency } from "@/lib/utils";
 
-const BRAND_NAVY = "#082238";
-const ACCENT = "#f78e10";
+const BRAND_NAVY = "#0d0d0d";
+const ACCENT = "#8b9a3a";
 const SITE_URL = siteUrl;
 
 function emailLayout(bodyHtml: string) {
@@ -18,11 +18,11 @@ function emailLayout(bodyHtml: string) {
             <tr>
               <td style="background:${BRAND_NAVY};padding:24px 32px;">
                 <span style="color:#ffffff;font-size:18px;font-weight:bold;">Vision To The World</span>
-                <div style="color:#9fc3e0;font-size:12px;margin-top:2px;">Your Journey. Your Choice. Your World.</div>
+                <div style="color:#e1f0f5;font-size:12px;margin-top:2px;">Your Journey. Your Choice. Your World.</div>
               </td>
             </tr>
             <tr>
-              <td style="padding:32px;color:#0b1b2b;font-size:15px;line-height:1.6;">
+              <td style="padding:32px;color:#0d0d0d;font-size:15px;line-height:1.6;">
                 ${bodyHtml}
               </td>
             </tr>
