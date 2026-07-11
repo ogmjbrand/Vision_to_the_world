@@ -36,7 +36,7 @@ export const mockAdminBookings: AdminBooking[] = [
 export type AdminPayment = {
   id: string;
   customer: string;
-  gateway: "Paystack" | "Flutterwave" | "Stripe" | "PayPal";
+  gateway: "Stripe" | "PayPal" | "Cash App";
   amount: number;
   currency: string;
   status: "Paid" | "Refunded" | "Failed";
@@ -44,11 +44,11 @@ export type AdminPayment = {
 };
 
 export const mockPayments: AdminPayment[] = [
-  { id: "PM-5521", customer: "Amina Bello", gateway: "Paystack", amount: 612, currency: "USD", status: "Paid", date: "2026-07-08" },
+  { id: "PM-5521", customer: "Amina Bello", gateway: "Stripe", amount: 612, currency: "USD", status: "Paid", date: "2026-07-08" },
   { id: "PM-5519", customer: "Priya Nair", gateway: "Stripe", amount: 1899, currency: "USD", status: "Paid", date: "2026-07-06" },
-  { id: "PM-5511", customer: "James Okafor", gateway: "Flutterwave", amount: 210, currency: "USD", status: "Refunded", date: "2026-07-02" },
+  { id: "PM-5511", customer: "James Okafor", gateway: "Cash App", amount: 210, currency: "USD", status: "Refunded", date: "2026-07-02" },
   { id: "PM-5502", customer: "Carlos Mendes", gateway: "PayPal", amount: 780, currency: "USD", status: "Paid", date: "2026-06-29" },
-  { id: "PM-5498", customer: "Grace Adeyemi", gateway: "Paystack", amount: 340, currency: "USD", status: "Failed", date: "2026-06-27" },
+  { id: "PM-5498", customer: "Grace Adeyemi", gateway: "Cash App", amount: 340, currency: "USD", status: "Failed", date: "2026-06-27" },
 ];
 
 export const analyticsSummary = {

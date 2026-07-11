@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { Mail, MapPin, Phone, MessageCircle } from "lucide-react";
 import Logo from "@/components/layout/logo";
 import { services } from "@/lib/data/services";
+import { siteConfig, fullAddress } from "@/lib/data/site-config";
 
 const company = [
   { href: "/about", label: "About Us" },
@@ -17,7 +18,14 @@ const support = [
   { href: "/contact#consultant", label: "Talk to a Travel Consultant" },
 ];
 
-const payments = ["Paystack", "Flutterwave", "Stripe", "PayPal"];
+const payments = ["Stripe", "PayPal", "Cash App"];
+
+const socialLinks = [
+  { key: "facebook", monogram: "f", label: "Facebook" },
+  { key: "instagram", monogram: "IG", label: "Instagram" },
+  { key: "tiktok", monogram: "TT", label: "TikTok" },
+  { key: "youtube", monogram: "YT", label: "YouTube" },
+] as const;
 
 export default function Footer() {
   return (
@@ -32,18 +40,64 @@ export default function Footer() {
             </p>
             <ul className="mt-4 space-y-2 text-sm text-brand-300">
               <li className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-accent-400" />
-                support@visiontotheworld.com
+                <Mail className="h-4 w-4 shrink-0 text-accent-400" />
+                <a href={`mailto:${siteConfig.email}`} className="hover:text-white">
+                  {siteConfig.email}
+                </a>
               </li>
+              {siteConfig.phones.map((phone) => (
+                <li key={phone} className="flex items-center gap-2">
+                  <Phone className="h-4 w-4 shrink-0 text-accent-400" />
+                  <a
+                    href={`tel:${phone.replace(/[^+\d]/g, "")}`}
+                    className="hover:text-white"
+                  >
+                    {phone}
+                  </a>
+                </li>
+              ))}
               <li className="flex items-center gap-2">
-                <Phone className="h-4 w-4 text-accent-400" />
-                +1 (800) 555-0199
+                <MessageCircle className="h-4 w-4 shrink-0 text-accent-400" />
+                <a
+                  href={siteConfig.whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-white"
+                >
+                  Chat on WhatsApp
+                </a>
               </li>
-              <li className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-accent-400" />
-                Serving travelers worldwide
+              <li className="flex items-start gap-2">
+                <MapPin className="h-4 w-4 shrink-0 text-accent-400" />
+                {fullAddress}
               </li>
             </ul>
+
+            <div className="mt-5 flex items-center gap-3">
+              {socialLinks.map(({ key, monogram, label }) => {
+                const url = siteConfig.social[key];
+                return url ? (
+                  <a
+                    key={key}
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={label}
+                    className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-900 text-xs font-bold text-brand-200 hover:bg-brand-800 hover:text-white"
+                  >
+                    {monogram}
+                  </a>
+                ) : (
+                  <span
+                    key={key}
+                    title={`${label} link coming soon`}
+                    className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-900/50 text-xs font-bold text-brand-600"
+                  >
+                    {monogram}
+                  </span>
+                );
+              })}
+            </div>
           </div>
 
           <div>

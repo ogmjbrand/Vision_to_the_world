@@ -1,6 +1,7 @@
 import { Plane, ArrowRight } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import type { FlightResult } from "@/lib/data/mock-results";
+import { checkoutHref } from "@/lib/checkout";
 import { LinkButton } from "@/components/ui/button";
 
 export default function FlightCard({ flight }: { flight: FlightResult }) {
@@ -33,7 +34,15 @@ export default function FlightCard({ flight }: { flight: FlightResult }) {
         <p className="text-xl font-bold text-brand-950">
           {formatCurrency(flight.price, flight.currency)}
         </p>
-        <LinkButton href="/auth/login" size="sm">
+        <LinkButton
+          href={checkoutHref({
+            type: "Flight",
+            title: `${flight.airline} ${flight.flightNumber} · ${flight.origin} → ${flight.destination}`,
+            price: flight.price,
+            currency: flight.currency,
+          })}
+          size="sm"
+        >
           Select
         </LinkButton>
       </div>

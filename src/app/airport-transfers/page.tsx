@@ -6,6 +6,7 @@ import SearchWidget from "@/components/search/search-widget";
 import { LinkButton } from "@/components/ui/button";
 import { getService } from "@/lib/data/services";
 import { generateTransferResults } from "@/lib/data/mock-results";
+import { checkoutHref } from "@/lib/checkout";
 import { formatCurrency } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -74,7 +75,15 @@ export default async function AirportTransfersPage({
                     <p className="text-xl font-bold text-brand-950">
                       {formatCurrency(transfer.price, transfer.currency)}
                     </p>
-                    <LinkButton href="/auth/login" size="sm">
+                    <LinkButton
+                      href={checkoutHref({
+                        type: "Airport Transfer",
+                        title: `${transfer.provider} · ${transfer.vehicle} (${airport.toUpperCase()} → ${dropoff})`,
+                        price: transfer.price,
+                        currency: transfer.currency,
+                      })}
+                      size="sm"
+                    >
                       Book transfer
                     </LinkButton>
                   </div>

@@ -3,7 +3,7 @@ import { CreditCard, Plus } from "lucide-react";
 
 export const metadata: Metadata = { title: "Payments" };
 
-const gateways = ["Paystack", "Flutterwave", "Stripe", "PayPal"];
+const gateways = ["Stripe", "PayPal", "Cash App"];
 
 export default function PaymentsPage() {
   return (

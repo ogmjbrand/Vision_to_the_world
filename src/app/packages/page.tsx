@@ -6,6 +6,7 @@ import Container from "@/components/ui/container";
 import { LinkButton } from "@/components/ui/button";
 import { getService } from "@/lib/data/services";
 import { travelPackages } from "@/lib/data/packages";
+import { checkoutHref } from "@/lib/checkout";
 import { formatCurrency } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -68,7 +69,15 @@ export default function PackagesPage() {
                       / person
                     </span>
                   </p>
-                  <LinkButton href="/auth/login" size="sm">
+                  <LinkButton
+                    href={checkoutHref({
+                      type: "Travel Package",
+                      title: pkg.name,
+                      price: pkg.price,
+                      currency: pkg.currency,
+                    })}
+                    size="sm"
+                  >
                     Book package
                   </LinkButton>
                 </div>

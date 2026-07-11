@@ -1,15 +1,17 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
 import SiteChrome from "@/components/layout/site-chrome";
+import { siteConfig } from "@/lib/data/site-config";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const playfair = Playfair_Display({
+  variable: "--font-heading",
   subsets: ["latin"],
+  weight: ["500", "600", "700", "800"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const inter = Inter({
+  variable: "--font-body",
   subsets: ["latin"],
 });
 
@@ -32,6 +34,25 @@ export const metadata: Metadata = {
   ],
 };
 
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "TravelAgency",
+  name: siteConfig.name,
+  description:
+    "Self-service travel technology platform for flights, hotels, car rentals, airport transfers, vacation packages, visa assistance, and travel insurance.",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: siteConfig.address.street,
+    addressLocality: siteConfig.address.city,
+    addressRegion: siteConfig.address.state,
+    postalCode: siteConfig.address.zip,
+    addressCountry: siteConfig.address.country,
+  },
+  telephone: siteConfig.phones[0],
+  email: siteConfig.email,
+  slogan: siteConfig.tagline,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -40,8 +61,14 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${playfair.variable} ${inter.variable} h-full antialiased`}
     >
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        />
+      </head>
       <body className="min-h-full flex flex-col bg-white text-[var(--foreground)]">
         <SiteChrome>{children}</SiteChrome>
       </body>

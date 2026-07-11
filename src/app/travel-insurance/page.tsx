@@ -5,6 +5,7 @@ import Container from "@/components/ui/container";
 import SectionHeading from "@/components/ui/section-heading";
 import { LinkButton } from "@/components/ui/button";
 import { getService } from "@/lib/data/services";
+import { checkoutHref } from "@/lib/checkout";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -129,7 +130,12 @@ export default function TravelInsurancePage() {
                 ))}
               </ul>
               <LinkButton
-                href="/auth/login"
+                href={checkoutHref({
+                  type: "Travel Insurance",
+                  title: `${plan.name} plan (${plan.period})`,
+                  price: plan.price,
+                  currency: "USD",
+                })}
                 className="mt-6"
                 variant={plan.highlighted ? "primary" : "outline"}
               >

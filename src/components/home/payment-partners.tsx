@@ -1,7 +1,7 @@
 import Container from "@/components/ui/container";
 import { ShieldCheck } from "lucide-react";
 
-const partners = ["Paystack", "Flutterwave", "Stripe", "PayPal"];
+const partners = ["Stripe", "PayPal", "Cash App"];
 
 export default function PaymentPartners() {
   return (

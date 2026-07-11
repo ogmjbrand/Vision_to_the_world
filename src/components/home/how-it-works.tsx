@@ -21,7 +21,7 @@ const steps: { title: string; description: string; icon: LucideIcon }[] = [
   },
   {
     title: "Book & pay securely",
-    description: "Choose your options and pay with Paystack, Flutterwave, Stripe, or PayPal.",
+    description: "Choose your options and pay with Stripe, PayPal, or Cash App.",
     icon: CreditCard,
   },
   {

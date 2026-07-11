@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { Mail, Phone, Headphones } from "lucide-react";
+import { Mail, Phone, Headphones, MessageCircle, MapPin } from "lucide-react";
 import Container from "@/components/ui/container";
 import SectionHeading from "@/components/ui/section-heading";
 import ContactForm from "@/components/contact/contact-form";
+import { siteConfig, fullAddress } from "@/lib/data/site-config";
 
 export const metadata: Metadata = {
   title: "Contact Us",
@@ -34,14 +35,36 @@ export default function ContactPage() {
                 provide personalized, professional assistance.
               </p>
             </div>
-            <div className="rounded-2xl border border-brand-100 bg-white p-6 shadow-sm">
-              <p className="flex items-center gap-2 text-sm text-brand-700">
-                <Mail className="h-4 w-4 text-accent-600" />
-                support@visiontotheworld.com
-              </p>
-              <p className="mt-2 flex items-center gap-2 text-sm text-brand-700">
-                <Phone className="h-4 w-4 text-accent-600" />
-                +1 (800) 555-0199
+            <div className="space-y-3 rounded-2xl border border-brand-100 bg-white p-6 shadow-sm">
+              <a
+                href={`mailto:${siteConfig.email}`}
+                className="flex items-center gap-2 text-sm text-brand-700 hover:text-brand-950"
+              >
+                <Mail className="h-4 w-4 shrink-0 text-accent-600" />
+                {siteConfig.email}
+              </a>
+              {siteConfig.phones.map((phone) => (
+                <a
+                  key={phone}
+                  href={`tel:${phone.replace(/[^+\d]/g, "")}`}
+                  className="flex items-center gap-2 text-sm text-brand-700 hover:text-brand-950"
+                >
+                  <Phone className="h-4 w-4 shrink-0 text-accent-600" />
+                  {phone}
+                </a>
+              ))}
+              <a
+                href={siteConfig.whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-sm text-brand-700 hover:text-brand-950"
+              >
+                <MessageCircle className="h-4 w-4 shrink-0 text-accent-600" />
+                Chat on WhatsApp
+              </a>
+              <p className="flex items-start gap-2 text-sm text-brand-700">
+                <MapPin className="h-4 w-4 shrink-0 text-accent-600" />
+                {fullAddress}
               </p>
             </div>
           </div>

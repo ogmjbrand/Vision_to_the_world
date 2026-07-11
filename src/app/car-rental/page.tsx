@@ -6,6 +6,7 @@ import SearchWidget from "@/components/search/search-widget";
 import { LinkButton } from "@/components/ui/button";
 import { getService } from "@/lib/data/services";
 import { generateCarResults } from "@/lib/data/mock-results";
+import { checkoutHref } from "@/lib/checkout";
 import { formatCurrency } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -73,7 +74,15 @@ export default async function CarRentalPage({
                         / day
                       </span>
                     </p>
-                    <LinkButton href="/auth/login" size="sm">
+                    <LinkButton
+                      href={checkoutHref({
+                        type: "Car Rental",
+                        title: `${car.model} · ${car.company} (${car.category})`,
+                        price: car.pricePerDay,
+                        currency: car.currency,
+                      })}
+                      size="sm"
+                    >
                       Reserve
                     </LinkButton>
                   </div>

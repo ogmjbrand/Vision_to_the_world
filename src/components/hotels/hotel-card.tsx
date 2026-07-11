@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Star } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import type { HotelResult } from "@/lib/data/mock-results";
+import { checkoutHref } from "@/lib/checkout";
 import { LinkButton } from "@/components/ui/button";
 
 export default function HotelCard({ hotel }: { hotel: HotelResult }) {
@@ -48,7 +49,15 @@ export default function HotelCard({ hotel }: { hotel: HotelResult }) {
               <span className="text-sm font-normal text-brand-500"> / night</span>
             </p>
           </div>
-          <LinkButton href="/auth/login" size="sm">
+          <LinkButton
+            href={checkoutHref({
+              type: "Hotel",
+              title: hotel.name,
+              price: hotel.pricePerNight,
+              currency: hotel.currency,
+            })}
+            size="sm"
+          >
             Select
           </LinkButton>
         </div>
