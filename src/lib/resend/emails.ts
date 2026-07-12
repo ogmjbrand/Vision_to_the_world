@@ -2,9 +2,9 @@ import { getResendClient } from "@/lib/resend/server";
 import { RESEND_FROM_EMAIL } from "@/lib/resend/config";
 import { siteConfig, siteUrl } from "@/lib/data/site-config";
 import { formatCurrency } from "@/lib/utils";
+import BookingConfirmationEmail from "../../../emails/BookingConfirmation";
 
 const BRAND_NAVY = "#0d0d0d";
-const ACCENT = "#8b9a3a";
 const SITE_URL = siteUrl;
 
 function emailLayout(bodyHtml: string) {
@@ -40,10 +40,6 @@ function emailLayout(bodyHtml: string) {
 </html>`;
 }
 
-function button(label: string, href: string) {
-  return `<a href="${href}" style="display:inline-block;margin-top:20px;background:${ACCENT};color:#ffffff;text-decoration:none;font-weight:bold;padding:12px 24px;border-radius:8px;">${label}</a>`;
-}
-
 export async function sendBookingConfirmationEmail(params: {
   to: string;
   title: string;
@@ -54,28 +50,21 @@ export async function sendBookingConfirmationEmail(params: {
   const resend = getResendClient();
   if (!resend) return { error: "Resend is not configured." };
 
-  const html = emailLayout(`
-    <h1 style="margin:0 0 16px;font-size:22px;">Booking confirmed 🎉</h1>
-    <p>Thanks for booking with Vision To The World! Here's a summary of your trip:</p>
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:20px 0;border:1px solid #e2e8f0;border-radius:8px;">
-      <tr>
-        <td style="padding:16px;">
-          <div style="color:#6b7c8f;font-size:12px;text-transform:uppercase;letter-spacing:0.04em;">${params.type}</div>
-          <div style="font-size:17px;font-weight:bold;margin-top:4px;">${params.title}</div>
-          <div style="margin-top:12px;font-size:20px;font-weight:bold;color:${BRAND_NAVY};">${formatCurrency(params.total, params.currency)}</div>
-        </td>
-      </tr>
-    </table>
-    <p>You can view and manage this booking anytime from your dashboard.</p>
-    ${button("View my bookings", `${SITE_URL}/dashboard/bookings`)}
-  `);
+  const bookingRef = `VTW-${Date.now().toString(36).toUpperCase()}`;
 
   return resend.emails.send({
     from: RESEND_FROM_EMAIL,
     to: params.to,
     subject: `Booking confirmed: ${params.title}`,
-    html,
-    text: `Booking confirmed: ${params.title} (${params.type}) — ${formatCurrency(params.total, params.currency)}. View your bookings at ${SITE_URL}/dashboard/bookings`,
+    react: BookingConfirmationEmail({
+      name: params.to.split("@")[0],
+      title: params.title,
+      type: params.type,
+      bookingRef,
+      total: params.total,
+      currency: params.currency,
+    }),
+    text: `Booking confirmed: ${params.title} (${params.type}) — ${formatCurrency(params.total, params.currency)}. Reference: ${bookingRef}. View your bookings at ${SITE_URL}/dashboard/bookings`,
   });
 }
 
