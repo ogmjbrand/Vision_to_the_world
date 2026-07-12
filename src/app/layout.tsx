@@ -21,6 +21,9 @@ const description =
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
+  alternates: {
+    canonical: "/",
+  },
   title: {
     default: "Vision To The World | Your Journey. Your Choice. Your World.",
     template: "%s | Vision To The World",
