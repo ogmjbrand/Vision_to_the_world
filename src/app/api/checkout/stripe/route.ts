@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getStripeClient } from "@/lib/stripe/server";
 import { computeOrderTotals } from "@/lib/checkout";
+import { getCurrentUser } from "@/lib/supabase/server";
 
 export async function POST(request: NextRequest) {
   const stripe = getStripeClient();
@@ -9,6 +10,14 @@ export async function POST(request: NextRequest) {
       { error: "Stripe is not configured on this deployment." },
       { status: 503 },
     );
+  }
+
+  // Identify the payer server-side (never trust a client-supplied user id) so
+  // the webhook can record the booking and send emails even if this browser
+  // never makes it back to /checkout/success.
+  const user = await getCurrentUser();
+  if (!user) {
+    return NextResponse.json({ error: "You must be signed in to check out." }, { status: 401 });
   }
 
   const body = await request.json();
@@ -30,6 +39,7 @@ export async function POST(request: NextRequest) {
   const session = await stripe.checkout.sessions.create({
     mode: "payment",
     payment_method_types: ["card"],
+    customer_email: user.email,
     line_items: [
       {
         price_data: {
@@ -61,6 +71,7 @@ export async function POST(request: NextRequest) {
       subtotal: String(subtotal),
       total: String(total),
       currency: currency ?? "USD",
+      userId: user.id,
       ...(travelDate ? { travelDate } : {}),
     },
   });
