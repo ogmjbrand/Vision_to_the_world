@@ -7,8 +7,10 @@ import { LinkButton } from "@/components/ui/button";
 import { getService } from "@/lib/data/services";
 import { checkoutHref } from "@/lib/checkout";
 import { cn } from "@/lib/utils";
+import { canonicalFor } from "@/lib/seo";
 
 export const metadata: Metadata = {
+  ...canonicalFor("/travel-insurance"),
   title: "Travel Insurance",
   description:
     "Optional travel insurance with medical coverage, trip cancellation protection, and 24/7 emergency support.",

@@ -5,8 +5,10 @@ import SectionHeading from "@/components/ui/section-heading";
 import ContactForm from "@/components/contact/contact-form";
 import OfficeMapLoader from "@/components/contact/office-map-loader";
 import { siteConfig, fullAddress } from "@/lib/data/site-config";
+import { canonicalFor } from "@/lib/seo";
 
 export const metadata: Metadata = {
+  ...canonicalFor("/contact"),
   title: "Contact Us",
   description:
     "Get in touch with Vision To The World support or speak with a professional travel consultant for personalized assistance.",

@@ -6,8 +6,10 @@ import MissionVision from "@/components/home/mission-vision";
 import CTA from "@/components/home/cta";
 import VideoBackground from "@/components/home/video-background";
 import Founders from "@/components/about/founders";
+import { canonicalFor } from "@/lib/seo";
 
 export const metadata: Metadata = {
+  ...canonicalFor("/about"),
   title: "About Us",
   description:
     "Learn about Vision To The World's mission, vision, and commitment to a secure, transparent, and seamless travel experience.",

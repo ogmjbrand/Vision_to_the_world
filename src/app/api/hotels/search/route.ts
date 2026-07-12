@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { searchHotels } from "@/lib/travel-search";
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 
 /**
  * Hotel search endpoint.
@@ -9,6 +10,14 @@ import { searchHotels } from "@/lib/travel-search";
  * can't be resolved to an IATA city code, or on any upstream error).
  */
 export async function GET(request: NextRequest) {
+  const { allowed } = checkRateLimit(`hotels-search:${getClientIp(request)}`, {
+    limit: 20,
+    windowMs: 60 * 1000,
+  });
+  if (!allowed) {
+    return NextResponse.json({ error: "Too many requests." }, { status: 429 });
+  }
+
   const { searchParams } = new URL(request.url);
   const destination = searchParams.get("destination")?.trim();
   const checkIn = searchParams.get("checkIn")?.trim();

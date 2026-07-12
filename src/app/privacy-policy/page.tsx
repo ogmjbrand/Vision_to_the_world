@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { LegalPage, LegalSection } from "@/components/legal/legal-page";
 import { siteConfig, fullAddress } from "@/lib/data/site-config";
+import { canonicalFor } from "@/lib/seo";
 
 export const metadata: Metadata = {
+  ...canonicalFor("/privacy-policy"),
   title: "Privacy Policy",
   description:
     "How Vision To The World collects, uses, and protects your personal information when you use our travel booking platform.",

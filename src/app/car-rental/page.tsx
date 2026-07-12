@@ -8,8 +8,10 @@ import { getService } from "@/lib/data/services";
 import { generateCarResults } from "@/lib/data/mock-results";
 import { checkoutHref } from "@/lib/checkout";
 import { formatCurrency } from "@/lib/utils";
+import { canonicalFor } from "@/lib/seo";
 
 export const metadata: Metadata = {
+  ...canonicalFor("/car-rental"),
   title: "Car Rental",
   description:
     "Search rental vehicles worldwide, compare rental companies and categories, and book securely online.",

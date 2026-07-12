@@ -5,8 +5,10 @@ import Container from "@/components/ui/container";
 import SectionHeading from "@/components/ui/section-heading";
 import { LinkButton } from "@/components/ui/button";
 import { getService } from "@/lib/data/services";
+import { canonicalFor } from "@/lib/seo";
 
 export const metadata: Metadata = {
+  ...canonicalFor("/visa-assistance"),
   title: "Visa & Travel Assistance",
   description:
     "Visa information, documentation support, destination requirements, and entry regulations to help you travel with confidence.",

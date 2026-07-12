@@ -63,8 +63,17 @@ export default function DestinationsGallery() {
                 <motion.div
                   key={item.id}
                   layoutId={`media-${item.id}`}
-                  className={`group relative cursor-move overflow-hidden rounded-2xl ${item.span}`}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`Open ${item.title}`}
+                  className={`group relative cursor-move overflow-hidden rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-white ${item.span}`}
                   onClick={() => !isDragging && setSelectedItem(item)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      setSelectedItem(item);
+                    }
+                  }}
                   variants={{
                     hidden: { y: 30, scale: 0.9, opacity: 0 },
                     visible: {

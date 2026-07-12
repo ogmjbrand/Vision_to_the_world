@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { LegalPage, LegalSection } from "@/components/legal/legal-page";
 import { siteConfig } from "@/lib/data/site-config";
+import { canonicalFor } from "@/lib/seo";
 
 export const metadata: Metadata = {
+  ...canonicalFor("/refund-policy"),
   title: "Refund Policy",
   description:
     "How cancellations, changes, and refunds are handled for flights, hotels, car rentals, packages, visa assistance, and travel insurance booked through Vision To The World.",

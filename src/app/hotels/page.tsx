@@ -6,8 +6,10 @@ import SearchWidget from "@/components/search/search-widget";
 import HotelCard from "@/components/hotels/hotel-card";
 import { getService } from "@/lib/data/services";
 import { searchHotels } from "@/lib/travel-search";
+import { canonicalFor } from "@/lib/seo";
 
 export const metadata: Metadata = {
+  ...canonicalFor("/hotels"),
   title: "Hotel Booking",
   description:
     "Discover hotels worldwide, compare rooms and prices, and book instantly with real-time availability.",

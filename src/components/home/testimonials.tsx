@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { ArrowRight } from "lucide-react";
 import Container from "@/components/ui/container";
 import { TestimonialCard, type CardPosition } from "@/components/home/testimonial-card";
 import { testimonials } from "@/lib/data/testimonials";
@@ -50,9 +51,19 @@ export default function Testimonials() {
           </div>
         </div>
 
-        <p className="mt-8 text-center text-xs text-brand-400">
-          Drag a card to the left for the next story
-        </p>
+        <div className="mt-8 flex flex-col items-center gap-3">
+          <p className="text-center text-xs text-brand-400">
+            Drag a card to the left, or use the button, for the next story
+          </p>
+          <button
+            type="button"
+            onClick={handleShuffle}
+            className="flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-white/10"
+          >
+            Next story
+            <ArrowRight className="h-3.5 w-3.5" />
+          </button>
+        </div>
       </Container>
     </section>
   );

@@ -4,8 +4,10 @@ import SectionHeading from "@/components/ui/section-heading";
 import CTA from "@/components/home/cta";
 import FaqAccordion from "@/components/faq/faq-accordion";
 import { faqs } from "@/lib/data/faq";
+import { canonicalFor } from "@/lib/seo";
 
 export const metadata: Metadata = {
+  ...canonicalFor("/faq"),
   title: "FAQ",
   description:
     "Answers to common questions about booking flights, hotels, car rentals, visa assistance, and travel insurance with Vision To The World.",

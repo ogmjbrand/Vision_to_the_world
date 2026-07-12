@@ -1,7 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { searchFlights } from "@/lib/travel-search";
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 
 export async function GET(request: NextRequest) {
+  const { allowed } = checkRateLimit(`flights-search:${getClientIp(request)}`, {
+    limit: 20,
+    windowMs: 60 * 1000,
+  });
+  if (!allowed) {
+    return NextResponse.json({ error: "Too many requests." }, { status: 429 });
+  }
+
   const { searchParams } = new URL(request.url);
   const origin = searchParams.get("origin")?.trim();
   const destination = searchParams.get("destination")?.trim();

@@ -31,6 +31,19 @@ export default async function AdminPaymentsPage() {
       <p className="mt-1 text-sm text-brand-600">
         Track transactions across all connected payment gateways.
       </p>
+      <p className="mt-3 rounded-lg bg-brand-50 px-3 py-2 text-xs text-brand-600">
+        To issue a refund for a Stripe payment, process it from the{" "}
+        <a
+          href="https://dashboard.stripe.com/payments"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-semibold text-brand-900 underline"
+        >
+          Stripe Dashboard
+        </a>{" "}
+        — this table updates automatically within seconds once Stripe confirms the refund. PayPal
+        and Cash App refunds are processed manually in each provider&apos;s own dashboard.
+      </p>
 
       <div className="mt-6 overflow-hidden rounded-2xl border border-brand-100 bg-white shadow-sm">
         <table className="w-full text-left text-sm">

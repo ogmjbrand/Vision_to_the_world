@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { LegalPage, LegalSection } from "@/components/legal/legal-page";
 import { siteConfig, fullAddress } from "@/lib/data/site-config";
+import { canonicalFor } from "@/lib/seo";
 
 export const metadata: Metadata = {
+  ...canonicalFor("/terms-conditions"),
   title: "Terms & Conditions",
   description:
     "The terms and conditions governing use of the Vision To The World self-service travel booking platform.",

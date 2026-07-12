@@ -8,8 +8,10 @@ import { getService } from "@/lib/data/services";
 import { generateTransferResults } from "@/lib/data/mock-results";
 import { checkoutHref } from "@/lib/checkout";
 import { formatCurrency } from "@/lib/utils";
+import { canonicalFor } from "@/lib/seo";
 
 export const metadata: Metadata = {
+  ...canonicalFor("/airport-transfers"),
   title: "Airport Transfers",
   description:
     "Book reliable airport pickup and drop-off services and schedule transfers in advance.",

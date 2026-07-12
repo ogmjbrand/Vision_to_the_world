@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence, type PanInfo } from "framer-motion";
 import { X } from "lucide-react";
 import MediaItem from "@/components/home/gallery-media-item";
@@ -23,9 +23,20 @@ export default function GalleryModal({
     setDockPosition((prev) => ({ x: prev.x + info.offset.x, y: prev.y + info.offset.y }));
   }
 
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") onClose();
+    }
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [onClose]);
+
   return (
     <>
       <motion.div
+        role="dialog"
+        aria-modal="true"
+        aria-label={selectedItem.title}
         initial={{ scale: 0.98 }}
         animate={{ scale: 1 }}
         exit={{ scale: 0.98 }}
@@ -88,12 +99,23 @@ export default function GalleryModal({
               return (
                 <motion.div
                   key={item.id}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`View ${item.title}`}
+                  aria-current={isActive}
                   onClick={(e) => {
                     e.stopPropagation();
                     setSelectedItem(item);
                   }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setSelectedItem(item);
+                    }
+                  }}
                   style={{ zIndex: isActive ? 30 : mediaItems.length - index }}
-                  className={`relative h-8 w-8 flex-shrink-0 cursor-pointer overflow-hidden rounded-lg sm:h-9 sm:w-9 md:h-10 md:w-10 ${
+                  className={`relative h-8 w-8 flex-shrink-0 cursor-pointer overflow-hidden rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-white sm:h-9 sm:w-9 md:h-10 md:w-10 ${
                     isActive ? "ring-2 ring-white/70" : "hover:ring-2 hover:ring-white/30"
                   }`}
                   initial={{ rotate: index % 2 === 0 ? -15 : 15 }}

@@ -1,14 +1,16 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import createGlobe from "cobe";
+import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { PlayCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { siteConfig } from "@/lib/data/site-config";
 import Reveal from "@/components/ui/reveal";
+
+const FeatureGlobe = dynamic(() => import("./feature-globe"), { ssr: false });
 
 const collageImages = [
   "/media/gallery/egypt-sphinx.jpg",
@@ -186,60 +188,5 @@ function SkeletonFour() {
     <div className="relative mt-10 flex h-60 flex-col items-center">
       <FeatureGlobe className="absolute -bottom-72 -right-10 md:-bottom-72 md:-right-10" />
     </div>
-  );
-}
-
-const GLOBE_MARKERS = [
-  { location: [42.8864, -78.8784] as [number, number], size: 0.08 }, // Buffalo, NY (HQ)
-  { location: [30.0444, 31.2357] as [number, number], size: 0.08 }, // Cairo, Egypt
-  { location: [6.5244, 3.3792] as [number, number], size: 0.08 }, // Lagos, Nigeria
-  { location: [51.5074, -0.1278] as [number, number], size: 0.08 }, // London, UK
-  { location: [25.2769, 55.2962] as [number, number], size: 0.08 }, // Dubai, UAE
-];
-
-function FeatureGlobe({ className }: { className?: string }) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    if (!canvasRef.current) return;
-
-    let phi = 0;
-    let animationFrame: number;
-
-    const globe = createGlobe(canvasRef.current, {
-      devicePixelRatio: 2,
-      width: 600 * 2,
-      height: 600 * 2,
-      phi: 0,
-      theta: 0,
-      dark: 1,
-      diffuse: 1.2,
-      mapSamples: 16000,
-      mapBrightness: 6,
-      baseColor: [0.13, 0.24, 0.38],
-      markerColor: [0.97, 0.56, 0.06],
-      glowColor: [0.9, 0.94, 1],
-      markers: GLOBE_MARKERS,
-    });
-
-    function frame() {
-      phi += 0.006;
-      globe.update({ phi });
-      animationFrame = requestAnimationFrame(frame);
-    }
-    animationFrame = requestAnimationFrame(frame);
-
-    return () => {
-      cancelAnimationFrame(animationFrame);
-      globe.destroy();
-    };
-  }, []);
-
-  return (
-    <canvas
-      ref={canvasRef}
-      style={{ width: 600, height: 600, maxWidth: "100%", aspectRatio: 1 }}
-      className={className}
-    />
   );
 }

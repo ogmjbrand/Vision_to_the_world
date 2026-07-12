@@ -8,8 +8,10 @@ import { getService } from "@/lib/data/services";
 import { travelPackages } from "@/lib/data/packages";
 import { checkoutHref } from "@/lib/checkout";
 import { formatCurrency } from "@/lib/utils";
+import { canonicalFor } from "@/lib/seo";
 
 export const metadata: Metadata = {
+  ...canonicalFor("/packages"),
   title: "Travel Packages",
   description:
     "Vacation, honeymoon, family, group, educational, and corporate travel packages — curated and ready to book.",

@@ -13,8 +13,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/privacy-policy", priority: 0.3, frequency: "yearly" as const },
     { path: "/terms-conditions", priority: 0.3, frequency: "yearly" as const },
     { path: "/refund-policy", priority: 0.3, frequency: "yearly" as const },
-    { path: "/auth/login", priority: 0.2, frequency: "yearly" as const },
-    { path: "/auth/sign-up", priority: 0.2, frequency: "yearly" as const },
   ];
 
   const serviceRoutes = services.map((service) => ({

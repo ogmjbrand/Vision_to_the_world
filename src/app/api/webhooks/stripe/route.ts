@@ -15,10 +15,12 @@ export const maxDuration = 30;
  * closed tab, dropped connection, or failed redirect still results in a
  * recorded booking and a sent confirmation/invoice.
  *
- * Both paths call the same findBookingByStripeSession() guard, and
- * bookings.stripe_session_id is unique-constrained in the schema, so
- * whichever path runs first wins and the other is a no-op — safe even if
- * both fire for the same session.
+ * Also keeps payment/booking status in sync when a refund is issued
+ * (whether from the admin panel's Refund button or directly in the Stripe
+ * Dashboard) via charge.refunded.
+ *
+ * Configure both events on the Stripe Dashboard endpoint — see
+ * docs/STRIPE_SETUP.md.
  */
 export async function POST(request: NextRequest) {
   const stripe = getStripeClient();
@@ -43,11 +45,26 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid signature." }, { status: 400 });
   }
 
-  if (event.type !== "checkout.session.completed") {
-    return NextResponse.json({ received: true });
+  const supabase = createAdminClient();
+  if (!supabase) {
+    console.error("[webhook:stripe] SUPABASE_SERVICE_ROLE_KEY is not configured — cannot process", event.id);
+    return NextResponse.json({ error: "Service role not configured." }, { status: 503 });
   }
 
-  const session = event.data.object as Stripe.Checkout.Session;
+  switch (event.type) {
+    case "checkout.session.completed":
+      return handleCheckoutCompleted(supabase, event.data.object as Stripe.Checkout.Session);
+    case "charge.refunded":
+      return handleChargeRefunded(supabase, event.data.object as Stripe.Charge);
+    default:
+      return NextResponse.json({ received: true });
+  }
+}
+
+async function handleCheckoutCompleted(
+  supabase: NonNullable<ReturnType<typeof createAdminClient>>,
+  session: Stripe.Checkout.Session,
+) {
   const meta = session.metadata;
 
   if (!meta?.userId || !meta.type || !meta.title || !meta.subtotal) {
@@ -55,16 +72,20 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ received: true });
   }
 
-  const supabase = createAdminClient();
-  if (!supabase) {
-    console.error("[webhook:stripe] SUPABASE_SERVICE_ROLE_KEY is not configured — cannot fulfill", session.id);
-    return NextResponse.json({ error: "Service role not configured." }, { status: 503 });
-  }
-
+  // bookings.stripe_session_id is unique-constrained, so this guard makes
+  // the handler safe to run twice for the same session (a Stripe retry, or
+  // a race with the success-page path) — whichever arrives first wins.
   const existing = await findBookingByStripeSession(supabase, session.id);
   if (existing) {
     return NextResponse.json({ received: true, alreadyFulfilled: true });
   }
+
+  // The payment_intent id (not the checkout session id) is what refunds are
+  // issued against, so it's what gets stored as the payment's gateway
+  // reference — session id stays on bookings.stripe_session_id for the
+  // idempotency check above.
+  const paymentIntentId =
+    typeof session.payment_intent === "string" ? session.payment_intent : session.payment_intent?.id;
 
   const { booking, invoice, error: bookingError } = await recordPaidBooking(supabase, {
     userId: meta.userId,
@@ -76,7 +97,7 @@ export async function POST(request: NextRequest) {
       travelDate: meta.travelDate,
     },
     gateway: "stripe",
-    gatewayReference: session.id,
+    gatewayReference: paymentIntentId ?? session.id,
     stripeSessionId: session.id,
   });
 
@@ -116,4 +137,45 @@ export async function POST(request: NextRequest) {
   ]);
 
   return NextResponse.json({ received: true, bookingId: booking.id });
+}
+
+async function handleChargeRefunded(
+  supabase: NonNullable<ReturnType<typeof createAdminClient>>,
+  charge: Stripe.Charge,
+) {
+  const paymentIntentId =
+    typeof charge.payment_intent === "string" ? charge.payment_intent : charge.payment_intent?.id;
+  if (!paymentIntentId) {
+    return NextResponse.json({ received: true });
+  }
+
+  const { data: payment } = await supabase
+    .from("payments")
+    .select("id, booking_id, status")
+    .eq("gateway_reference", paymentIntentId)
+    .eq("gateway", "stripe")
+    .maybeSingle();
+
+  if (!payment) {
+    console.error("[webhook:stripe] charge.refunded for unknown payment_intent:", paymentIntentId);
+    return NextResponse.json({ received: true });
+  }
+
+  if (payment.status === "refunded") {
+    return NextResponse.json({ received: true, alreadyProcessed: true }); // Stripe retry / duplicate delivery.
+  }
+
+  const fullyRefunded = charge.amount_refunded >= charge.amount;
+
+  await Promise.all([
+    supabase
+      .from("payments")
+      .update({ status: fullyRefunded ? "refunded" : "paid" })
+      .eq("id", payment.id),
+    fullyRefunded
+      ? supabase.from("bookings").update({ status: "cancelled" }).eq("id", payment.booking_id)
+      : Promise.resolve(),
+  ]);
+
+  return NextResponse.json({ received: true, refunded: fullyRefunded });
 }

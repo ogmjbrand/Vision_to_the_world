@@ -6,8 +6,10 @@ import SearchWidget from "@/components/search/search-widget";
 import FlightCard from "@/components/flights/flight-card";
 import { getService } from "@/lib/data/services";
 import { searchFlights } from "@/lib/travel-search";
+import { canonicalFor } from "@/lib/seo";
 
 export const metadata: Metadata = {
+  ...canonicalFor("/flights"),
   title: "Flight Booking",
   description:
     "Search and compare flights from multiple airlines with real-time pricing, flexible dates, and instant e-ticket delivery.",
