@@ -55,6 +55,11 @@ export async function POST(request: NextRequest) {
     mode: "payment",
     payment_method_types: ["card"],
     customer_email: user.email,
+    // Explicit receipt_email forces Stripe to send its own payment receipt
+    // for this charge regardless of the account's Dashboard "Email customers
+    // about successful payments" toggle — this is Vision To The World's
+    // separate booking-confirmation/invoice email, sent by the webhook.
+    payment_intent_data: { receipt_email: user.email },
     line_items: [
       {
         price_data: {

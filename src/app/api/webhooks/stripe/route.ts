@@ -17,9 +17,11 @@ export const maxDuration = 30;
  *
  * Also keeps payment/booking status in sync when a refund is issued
  * (whether from the admin panel's Refund button or directly in the Stripe
- * Dashboard) via charge.refunded.
+ * Dashboard) via charge.refunded, and carries a payment_intent.succeeded
+ * backstop for the rare case checkout.session.completed itself is lost in
+ * transit (see handlePaymentIntentSucceeded below).
  *
- * Configure both events on the Stripe Dashboard endpoint — see
+ * Configure all three events on the Stripe Dashboard endpoint — see
  * docs/STRIPE_SETUP.md.
  */
 export async function POST(request: NextRequest) {
@@ -54,6 +56,8 @@ export async function POST(request: NextRequest) {
   switch (event.type) {
     case "checkout.session.completed":
       return handleCheckoutCompleted(supabase, event.data.object as Stripe.Checkout.Session);
+    case "payment_intent.succeeded":
+      return handlePaymentIntentSucceeded(stripe, supabase, event.data.object as Stripe.PaymentIntent);
     case "charge.refunded":
       return handleChargeRefunded(supabase, event.data.object as Stripe.Charge);
     default:
@@ -137,6 +141,33 @@ async function handleCheckoutCompleted(
   ]);
 
   return NextResponse.json({ received: true, bookingId: booking.id });
+}
+
+/**
+ * checkout.session.completed is what actually fulfils a booking — it fires
+ * at (or within moments of) the same time this event does for the same
+ * payment, so this is normally a no-op. It exists purely as a backstop for
+ * the rare case that event is lost in transit but this one still arrives:
+ * look up which Checkout Session this PaymentIntent belongs to and run it
+ * through the exact same handler, so there's exactly one idempotency check
+ * (bookings.stripe_session_id) regardless of which event triggers
+ * fulfillment — no separate code path that could double-book a payment
+ * both events report.
+ */
+async function handlePaymentIntentSucceeded(
+  stripe: NonNullable<ReturnType<typeof getStripeClient>>,
+  supabase: NonNullable<ReturnType<typeof createAdminClient>>,
+  paymentIntent: Stripe.PaymentIntent,
+) {
+  const sessions = await stripe.checkout.sessions.list({
+    payment_intent: paymentIntent.id,
+    limit: 1,
+  });
+  const session = sessions.data[0];
+  if (!session) {
+    return NextResponse.json({ received: true }); // Not a Checkout-originated payment.
+  }
+  return handleCheckoutCompleted(supabase, session);
 }
 
 async function handleChargeRefunded(
