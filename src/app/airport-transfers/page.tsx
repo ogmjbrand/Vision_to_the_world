@@ -6,7 +6,7 @@ import SearchWidget from "@/components/search/search-widget";
 import { LinkButton } from "@/components/ui/button";
 import { getService } from "@/lib/data/services";
 import { generateTransferResults } from "@/lib/data/mock-results";
-import { checkoutHref } from "@/lib/checkout";
+import { checkoutHref } from "@/lib/checkout-sign";
 import { formatCurrency } from "@/lib/utils";
 import { canonicalFor } from "@/lib/seo";
 

@@ -30,17 +30,6 @@ export function parseCheckoutItem(
   return { type, title, price, currency, ...(travelDate ? { travelDate } : {}) };
 }
 
-export function checkoutHref(item: CheckoutItem): string {
-  const params = new URLSearchParams({
-    type: item.type,
-    title: item.title,
-    price: String(item.price),
-    currency: item.currency,
-  });
-  if (item.travelDate) params.set("travelDate", item.travelDate);
-  return `/checkout?${params.toString()}`;
-}
-
 export function computeOrderTotals(price: number) {
   const serviceFee = Math.round(price * SERVICE_FEE_RATE * 100) / 100;
   const total = Math.round((price + serviceFee) * 100) / 100;

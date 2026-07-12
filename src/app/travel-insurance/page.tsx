@@ -5,7 +5,7 @@ import Container from "@/components/ui/container";
 import SectionHeading from "@/components/ui/section-heading";
 import { LinkButton } from "@/components/ui/button";
 import { getService } from "@/lib/data/services";
-import { checkoutHref } from "@/lib/checkout";
+import { checkoutHref } from "@/lib/checkout-sign";
 import { cn } from "@/lib/utils";
 import { canonicalFor } from "@/lib/seo";
 

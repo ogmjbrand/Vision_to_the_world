@@ -1,7 +1,7 @@
 import { Plane, ArrowRight } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import type { FlightResult } from "@/lib/data/mock-results";
-import { checkoutHref } from "@/lib/checkout";
+import { checkoutHref } from "@/lib/checkout-sign";
 import { LinkButton } from "@/components/ui/button";
 
 export default function FlightCard({

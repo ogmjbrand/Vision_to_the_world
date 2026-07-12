@@ -15,7 +15,10 @@ moment payment completes — independent of the customer's browser.
 Stripe Dashboard → Developers → Webhooks → **Add endpoint**:
 
 - Endpoint URL: `https://<your-deployed-domain>/api/webhooks/stripe`
-- Events to send: `checkout.session.completed` (only one needed)
+- Events to send: `checkout.session.completed` and `charge.refunded`
+  (both required — the first records the booking, the second keeps
+  `payments`/`bookings` status in sync when a refund is issued, whether from
+  the admin panel's Stripe Dashboard link or directly in Stripe)
 
 After creating it, open the endpoint and copy its **Signing secret**
 (starts with `whsec_`).
@@ -36,16 +39,43 @@ the booking without a logged-in browser session).
 ## 3. Test it
 
 Stripe Dashboard → Developers → Webhooks → your endpoint → **Send test
-webhook** → `checkout.session.completed`. Check the endpoint's request log
-there for a `200`, and check the new `email_logs` Supabase table for
-`booking_confirmation`/`invoice` rows.
+webhook** → `checkout.session.completed`, then again with `charge.refunded`.
+Check the endpoint's request log there for a `200` on each, and check the
+new `email_logs` Supabase table for `booking_confirmation`/`invoice` rows
+after the first.
 
 For a real end-to-end test: complete an actual Stripe checkout, then check
 `bookings`/`payments`/`invoices` in Supabase and the two emails in your
 inbox. Both the webhook and the success page will attempt to record the
 same booking — that's expected; `bookings.stripe_session_id` is
 unique-constrained, so only the first to arrive actually inserts anything,
-and the emails only send once.
+and the emails only send once. Then issue a refund from the Stripe
+Dashboard for that payment and confirm the matching `payments` row flips to
+`refunded` (and `bookings` to `cancelled`, for a full refund) within a few
+seconds.
+
+## Live mode vs. test mode
+
+Stripe treats test and live payments as two separate environments, and this
+trips people up more than anything else here:
+
+- **API keys are mode-scoped.** `STRIPE_SECRET_KEY` must be the **live**
+  secret key (`sk_live_...`) in Vercel's Production env for real charges to
+  go through — `sk_test_...` will only ever create test-mode sessions that
+  show up in Stripe's Test mode dashboard, never charge a real card, and
+  never appear in Live mode reporting.
+- **Webhook endpoints are mode-scoped too.** An endpoint created while the
+  Dashboard's mode toggle (top-left) is set to Test only receives test-mode
+  events. It will not fire for a real, live payment, no matter how it's
+  configured. You need a **second, separate endpoint** created while toggled
+  to **Live** — same URL, same two events — and its **own** signing secret.
+- Whichever signing secret you copied in step 1, make sure it came from the
+  endpoint you created under the mode matching `STRIPE_SECRET_KEY`. A
+  live secret key paired with a test-mode endpoint's `STRIPE_WEBHOOK_SECRET`
+  means real payments succeed on Stripe's side but the webhook silently
+  fails signature verification (visible in this project's server logs as
+  `[webhook:stripe] signature verification failed`) and no booking or email
+  ever fires — the customer is charged with nothing recorded.
 
 ## Why the checkout session also needed a change
 

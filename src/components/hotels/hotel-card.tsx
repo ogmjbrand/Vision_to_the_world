@@ -2,7 +2,7 @@ import Image from "next/image";
 import { Star } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import type { HotelResult } from "@/lib/data/mock-results";
-import { checkoutHref } from "@/lib/checkout";
+import { checkoutHref } from "@/lib/checkout-sign";
 import { LinkButton } from "@/components/ui/button";
 
 export default function HotelCard({

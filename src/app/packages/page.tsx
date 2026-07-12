@@ -6,7 +6,7 @@ import Container from "@/components/ui/container";
 import { LinkButton } from "@/components/ui/button";
 import { getService } from "@/lib/data/services";
 import { travelPackages } from "@/lib/data/packages";
-import { checkoutHref } from "@/lib/checkout";
+import { checkoutHref } from "@/lib/checkout-sign";
 import { formatCurrency } from "@/lib/utils";
 import { canonicalFor } from "@/lib/seo";
 

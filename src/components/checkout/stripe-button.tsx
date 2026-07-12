@@ -7,9 +7,11 @@ import type { CheckoutItem } from "@/lib/checkout";
 
 export default function StripeButton({
   item,
+  sig,
   configured,
 }: {
   item: CheckoutItem;
+  sig?: string;
   configured: boolean;
 }) {
   const [loading, setLoading] = useState(false);
@@ -23,7 +25,7 @@ export default function StripeButton({
       const res = await fetch("/api/checkout/stripe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(item),
+        body: JSON.stringify({ ...item, sig }),
       });
       const data = await res.json();
 

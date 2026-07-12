@@ -19,6 +19,7 @@ export default async function CheckoutPage({
 }) {
   const params = await searchParams;
   const item = parseCheckoutItem(params);
+  const sig = typeof params.sig === "string" ? params.sig : undefined;
 
   if (!item) {
     return (
@@ -68,7 +69,7 @@ export default async function CheckoutPage({
         </div>
 
         <div className="mt-6 space-y-3">
-          <StripeButton item={item} configured={isStripeConfigured} />
+          <StripeButton item={item} sig={sig} configured={isStripeConfigured} />
           <PayPalButton item={item} userId={user?.id} userEmail={user?.email} />
           <CashAppPayment
             cashtag={siteConfig.cashAppTag}
