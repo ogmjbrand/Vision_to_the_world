@@ -7,7 +7,7 @@ import { getStripeClient } from "@/lib/stripe/server";
 import { formatCurrency } from "@/lib/utils";
 import { createClient, getCurrentUser } from "@/lib/supabase/server";
 import { findBookingByStripeSession, recordPaidBooking } from "@/lib/supabase/bookings";
-import { sendBookingConfirmationEmail } from "@/lib/resend/emails";
+import { sendBookingConfirmationEmail, sendInvoiceEmail } from "@/lib/resend/emails";
 
 export const metadata: Metadata = { title: "Booking Confirmed" };
 
@@ -39,27 +39,44 @@ export default async function CheckoutSuccessPage({
         if (user && supabase && meta?.type && meta.title && meta.subtotal) {
           const existing = await findBookingByStripeSession(supabase, sessionId);
           if (!existing) {
-            await recordPaidBooking(supabase, {
+            const { booking, invoice } = await recordPaidBooking(supabase, {
               userId: user.id,
               item: {
                 type: meta.type,
                 title: meta.title,
                 price: Number(meta.subtotal),
                 currency: meta.currency ?? "USD",
+                travelDate: meta.travelDate,
               },
               gateway: "stripe",
               gatewayReference: sessionId,
               stripeSessionId: sessionId,
             });
 
-            if (user.email) {
-              await sendBookingConfirmationEmail({
-                to: user.email,
-                title: meta.title,
-                type: meta.type,
-                total: Number(meta.total ?? meta.subtotal),
-                currency: meta.currency ?? "USD",
-              });
+            if (user.email && booking) {
+              const bookingRef = `VTW-${booking.id.slice(0, 8).toUpperCase()}`;
+              const subtotal = Number(meta.subtotal);
+              const total = Number(meta.total ?? meta.subtotal);
+
+              await Promise.all([
+                sendBookingConfirmationEmail({
+                  to: user.email,
+                  title: meta.title,
+                  type: meta.type,
+                  bookingRef,
+                  total,
+                  currency: meta.currency ?? "USD",
+                }),
+                sendInvoiceEmail({
+                  to: user.email,
+                  invoiceNumber: invoice?.invoice_number ?? bookingRef,
+                  title: meta.title,
+                  subtotal,
+                  serviceFee: total - subtotal,
+                  total,
+                  currency: meta.currency ?? "USD",
+                }),
+              ]);
             }
           }
         }

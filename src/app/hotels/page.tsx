@@ -54,7 +54,7 @@ export default async function HotelsPage({
             </div>
             <div className="grid gap-4">
               {results.map((hotel) => (
-                <HotelCard key={hotel.id} hotel={hotel} />
+                <HotelCard key={hotel.id} hotel={hotel} travelDate={checkIn} />
               ))}
             </div>
             {source === "mock" && (

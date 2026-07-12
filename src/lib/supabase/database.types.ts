@@ -25,6 +25,8 @@ export type Database = {
           currency: string;
           id: string;
           metadata: Json;
+          reminder_7d_sent_at: string | null;
+          reminder_24h_sent_at: string | null;
           service_fee: number;
           status: string;
           stripe_session_id: string | null;
@@ -40,6 +42,8 @@ export type Database = {
           currency?: string;
           id?: string;
           metadata?: Json;
+          reminder_7d_sent_at?: string | null;
+          reminder_24h_sent_at?: string | null;
           service_fee: number;
           status?: string;
           stripe_session_id?: string | null;
@@ -55,6 +59,8 @@ export type Database = {
           currency?: string;
           id?: string;
           metadata?: Json;
+          reminder_7d_sent_at?: string | null;
+          reminder_24h_sent_at?: string | null;
           service_fee?: number;
           status?: string;
           stripe_session_id?: string | null;
@@ -64,6 +70,75 @@ export type Database = {
           travel_date?: string | null;
           type?: string;
           user_id?: string;
+        };
+        Relationships: [];
+      };
+      email_logs: {
+        Row: {
+          attempts: number;
+          created_at: string;
+          error: string | null;
+          id: string;
+          metadata: Json;
+          provider_id: string | null;
+          recipient: string;
+          status: string;
+          type: string;
+        };
+        Insert: {
+          attempts?: number;
+          created_at?: string;
+          error?: string | null;
+          id?: string;
+          metadata?: Json;
+          provider_id?: string | null;
+          recipient: string;
+          status: string;
+          type: string;
+        };
+        Update: {
+          attempts?: number;
+          created_at?: string;
+          error?: string | null;
+          id?: string;
+          metadata?: Json;
+          provider_id?: string | null;
+          recipient?: string;
+          status?: string;
+          type?: string;
+        };
+        Relationships: [];
+      };
+      newsletter_campaigns: {
+        Row: {
+          created_at: string;
+          failure_count: number;
+          headline: string;
+          id: string;
+          intro: string;
+          recipient_count: number;
+          sent_by: string | null;
+          success_count: number;
+        };
+        Insert: {
+          created_at?: string;
+          failure_count?: number;
+          headline: string;
+          id?: string;
+          intro: string;
+          recipient_count?: number;
+          sent_by?: string | null;
+          success_count?: number;
+        };
+        Update: {
+          created_at?: string;
+          failure_count?: number;
+          headline?: string;
+          id?: string;
+          intro?: string;
+          recipient_count?: number;
+          sent_by?: string | null;
+          success_count?: number;
         };
         Relationships: [];
       };
@@ -155,27 +230,33 @@ export type Database = {
           email: string | null;
           full_name: string | null;
           id: string;
+          newsletter_opt_in: boolean;
           phone: string | null;
           role: string;
           updated_at: string;
+          welcome_email_sent_at: string | null;
         };
         Insert: {
           created_at?: string;
           email?: string | null;
           full_name?: string | null;
           id: string;
+          newsletter_opt_in?: boolean;
           phone?: string | null;
           role?: string;
           updated_at?: string;
+          welcome_email_sent_at?: string | null;
         };
         Update: {
           created_at?: string;
           email?: string | null;
           full_name?: string | null;
           id?: string;
+          newsletter_opt_in?: boolean;
           phone?: string | null;
           role?: string;
           updated_at?: string;
+          welcome_email_sent_at?: string | null;
         };
         Relationships: [];
       };
@@ -251,3 +332,12 @@ export type PaymentStatus = "paid" | "pending" | "refunded" | "failed";
 export type TicketStatus = "open" | "in_progress" | "resolved";
 export type TicketPriority = "low" | "medium" | "high";
 export type ProfileRole = "customer" | "admin";
+export type EmailType =
+  | "welcome"
+  | "booking_confirmation"
+  | "invoice"
+  | "trip_reminder"
+  | "newsletter"
+  | "contact_notification"
+  | "contact_auto_reply";
+export type EmailLogStatus = "sent" | "failed";

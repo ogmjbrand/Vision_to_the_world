@@ -54,7 +54,7 @@ export default async function FlightsPage({
             </div>
             <div className="grid gap-4">
               {results.map((flight) => (
-                <FlightCard key={flight.id} flight={flight} />
+                <FlightCard key={flight.id} flight={flight} travelDate={date} />
               ))}
             </div>
             {source === "mock" && (

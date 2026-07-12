@@ -3,12 +3,13 @@ import { sendBookingConfirmationEmail } from "@/lib/resend/emails";
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
-  const { to, title, type, total, currency } = body as {
+  const { to, title, type, total, currency, bookingRef } = body as {
     to?: string;
     title?: string;
     type?: string;
     total?: number;
     currency?: string;
+    bookingRef?: string;
   };
 
   if (!to || !title || !type || !Number.isFinite(total)) {
@@ -19,13 +20,14 @@ export async function POST(request: NextRequest) {
     to,
     title,
     type,
+    bookingRef: bookingRef ?? `VTW-${Date.now().toString(36).toUpperCase()}`,
     total: total as number,
     currency: currency ?? "USD",
   });
 
-  if (result.error) {
-    // Email failures shouldn't block the booking flow — log and report, don't throw.
-    console.error("Booking confirmation email failed:", result.error);
+  if (!result.success) {
+    // Email failures shouldn't block the booking flow — sendBookingConfirmationEmail
+    // already retried and logged this; just report the outcome, don't throw.
     return NextResponse.json({ sent: false }, { status: 200 });
   }
 

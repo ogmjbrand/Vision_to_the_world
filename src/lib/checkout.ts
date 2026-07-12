@@ -5,6 +5,8 @@ export type CheckoutItem = {
   title: string;
   price: number;
   currency: string;
+  /** ISO date (YYYY-MM-DD) the trip departs/checks in — powers the trip-reminder cron. Optional since not every service (visa assistance, insurance) has one. */
+  travelDate?: string;
 };
 
 export function parseCheckoutItem(
@@ -21,10 +23,11 @@ export function parseCheckoutItem(
   const title = get("title");
   const price = Number(get("price"));
   const currency = get("currency") ?? "USD";
+  const travelDate = get("travelDate");
 
   if (!type || !title || !Number.isFinite(price) || price <= 0) return null;
 
-  return { type, title, price, currency };
+  return { type, title, price, currency, ...(travelDate ? { travelDate } : {}) };
 }
 
 export function checkoutHref(item: CheckoutItem): string {
@@ -34,6 +37,7 @@ export function checkoutHref(item: CheckoutItem): string {
     price: String(item.price),
     currency: item.currency,
   });
+  if (item.travelDate) params.set("travelDate", item.travelDate);
   return `/checkout?${params.toString()}`;
 }
 

@@ -26,6 +26,7 @@ export default async function CarRentalPage({
   const location = typeof params.location === "string" ? params.location : undefined;
   const vehicleType =
     typeof params.vehicleType === "string" ? params.vehicleType : "economy";
+  const pickupDate = typeof params.pickupDate === "string" ? params.pickupDate : undefined;
 
   const hasSearch = !!location;
   const results = hasSearch ? generateCarResults(location, vehicleType) : [];
@@ -80,6 +81,7 @@ export default async function CarRentalPage({
                         title: `${car.model} · ${car.company} (${car.category})`,
                         price: car.pricePerDay,
                         currency: car.currency,
+                        travelDate: pickupDate,
                       })}
                       size="sm"
                     >

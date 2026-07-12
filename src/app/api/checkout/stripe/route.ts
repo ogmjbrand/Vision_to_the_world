@@ -12,11 +12,12 @@ export async function POST(request: NextRequest) {
   }
 
   const body = await request.json();
-  const { type, title, price, currency } = body as {
+  const { type, title, price, currency, travelDate } = body as {
     type?: string;
     title?: string;
     price?: number;
     currency?: string;
+    travelDate?: string;
   };
 
   if (!type || !title || !Number.isFinite(price) || (price as number) <= 0) {
@@ -60,6 +61,7 @@ export async function POST(request: NextRequest) {
       subtotal: String(subtotal),
       total: String(total),
       currency: currency ?? "USD",
+      ...(travelDate ? { travelDate } : {}),
     },
   });
 

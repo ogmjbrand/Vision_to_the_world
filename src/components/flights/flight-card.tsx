@@ -4,7 +4,13 @@ import type { FlightResult } from "@/lib/data/mock-results";
 import { checkoutHref } from "@/lib/checkout";
 import { LinkButton } from "@/components/ui/button";
 
-export default function FlightCard({ flight }: { flight: FlightResult }) {
+export default function FlightCard({
+  flight,
+  travelDate,
+}: {
+  flight: FlightResult;
+  travelDate?: string;
+}) {
   return (
     <div className="flex flex-col gap-4 rounded-2xl border border-brand-100 bg-white p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between">
       <div className="flex items-center gap-4">
@@ -40,6 +46,7 @@ export default function FlightCard({ flight }: { flight: FlightResult }) {
             title: `${flight.airline} ${flight.flightNumber} · ${flight.origin} → ${flight.destination}`,
             price: flight.price,
             currency: flight.currency,
+            travelDate,
           })}
           size="sm"
         >

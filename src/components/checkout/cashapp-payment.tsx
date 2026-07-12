@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Wallet, CheckCircle2 } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import type { CheckoutItem } from "@/lib/checkout";
+import { computeOrderTotals } from "@/lib/checkout";
 import { createClient } from "@/lib/supabase/client";
 import { recordPaidBooking } from "@/lib/supabase/bookings";
 import { Button } from "@/components/ui/button";
@@ -14,11 +15,13 @@ export default function CashAppPayment({
   total,
   item,
   userId,
+  userEmail,
 }: {
   cashtag?: string;
   total: number;
   item: CheckoutItem;
   userId?: string;
+  userEmail?: string;
 }) {
   const [confirmed, setConfirmed] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -29,14 +32,54 @@ export default function CashAppPayment({
   async function handleConfirm() {
     setLoading(true);
 
+    let bookingRef: string | undefined;
+    let invoiceNumber: string | undefined;
+
     if (userId) {
       const supabase = createClient();
-      await recordPaidBooking(supabase, {
+      const { booking, invoice } = await recordPaidBooking(supabase, {
         userId,
         item,
         gateway: "cashapp",
         paymentStatus: "pending",
         bookingStatus: "pending_confirmation",
+      });
+      if (booking) bookingRef = `VTW-${booking.id.slice(0, 8).toUpperCase()}`;
+      if (invoice) invoiceNumber = invoice.invoice_number;
+    }
+
+    if (userEmail) {
+      const { subtotal, serviceFee } = computeOrderTotals(item.price);
+
+      fetch("/api/notifications/booking-confirmation", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          to: userEmail,
+          title: item.title,
+          type: item.type,
+          total,
+          currency: item.currency,
+          bookingRef,
+        }),
+      }).catch(() => {
+        // Booking already recorded — a failed confirmation email shouldn't block checkout.
+      });
+
+      fetch("/api/notifications/invoice", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          to: userEmail,
+          title: item.title,
+          invoiceNumber,
+          subtotal,
+          serviceFee,
+          total,
+          currency: item.currency,
+        }),
+      }).catch(() => {
+        // Booking already recorded — a failed invoice email shouldn't block checkout.
       });
     }
 

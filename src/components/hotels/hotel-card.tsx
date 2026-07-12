@@ -5,7 +5,13 @@ import type { HotelResult } from "@/lib/data/mock-results";
 import { checkoutHref } from "@/lib/checkout";
 import { LinkButton } from "@/components/ui/button";
 
-export default function HotelCard({ hotel }: { hotel: HotelResult }) {
+export default function HotelCard({
+  hotel,
+  travelDate,
+}: {
+  hotel: HotelResult;
+  travelDate?: string;
+}) {
   return (
     <div className="flex flex-col overflow-hidden rounded-2xl border border-brand-100 bg-white shadow-sm sm:flex-row">
       <div className="relative h-48 w-full shrink-0 sm:h-auto sm:w-56">
@@ -55,6 +61,7 @@ export default function HotelCard({ hotel }: { hotel: HotelResult }) {
               title: hotel.name,
               price: hotel.pricePerNight,
               currency: hotel.currency,
+              travelDate,
             })}
             size="sm"
           >

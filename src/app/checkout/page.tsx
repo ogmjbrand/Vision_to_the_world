@@ -75,6 +75,7 @@ export default async function CheckoutPage({
             total={total}
             item={item}
             userId={user?.id}
+            userEmail={user?.email}
           />
         </div>
 

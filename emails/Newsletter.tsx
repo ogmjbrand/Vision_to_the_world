@@ -28,9 +28,11 @@ const highlights: Highlight[] = [
 export default function NewsletterEmail({
   headline = "Where will your next trip take you?",
   intro = "New routes, fresh package deals, and real-time pricing across flights, hotels, and more — all in one place.",
+  unsubscribeUrl = `${siteUrl}/api/newsletter/unsubscribe`,
 }: {
   headline?: string;
   intro?: string;
+  unsubscribeUrl?: string;
 }) {
   return (
     <EmailLayout preview={headline}>
@@ -63,7 +65,10 @@ export default function NewsletterEmail({
       <EmailButton href={`${siteUrl}/packages`}>Browse all packages</EmailButton>
 
       <Text style={unsubscribe}>
-        You&apos;re receiving this because you subscribed to Vision To The World updates.
+        You&apos;re receiving this because you have a Vision To The World account.{" "}
+        <a href={unsubscribeUrl} style={unsubscribeLink}>
+          Unsubscribe
+        </a>
       </Text>
     </EmailLayout>
   );
@@ -100,4 +105,9 @@ const unsubscribe = {
   fontSize: "11px",
   color: colors.textMuted,
   margin: "20px 0 0",
+};
+
+const unsubscribeLink = {
+  color: colors.textMuted,
+  textDecoration: "underline",
 };

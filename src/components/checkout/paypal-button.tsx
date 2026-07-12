@@ -56,17 +56,24 @@ export default function PayPalButton({
         }) => {
           const details = await actions.order.capture();
 
+          let bookingRef: string | undefined;
+          let invoiceNumber: string | undefined;
+
           if (userId) {
             const supabase = createClient();
-            await recordPaidBooking(supabase, {
+            const { booking, invoice } = await recordPaidBooking(supabase, {
               userId,
               item,
               gateway: "paypal",
               gatewayReference: details?.id,
             });
+            if (booking) bookingRef = `VTW-${booking.id.slice(0, 8).toUpperCase()}`;
+            if (invoice) invoiceNumber = invoice.invoice_number;
           }
 
           if (userEmail) {
+            const { subtotal, serviceFee } = computeOrderTotals(item.price);
+
             fetch("/api/notifications/booking-confirmation", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -76,9 +83,26 @@ export default function PayPalButton({
                 type: item.type,
                 total,
                 currency: item.currency,
+                bookingRef,
               }),
             }).catch(() => {
               // Booking already recorded — a failed confirmation email shouldn't block checkout.
+            });
+
+            fetch("/api/notifications/invoice", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                to: userEmail,
+                title: item.title,
+                invoiceNumber,
+                subtotal,
+                serviceFee,
+                total,
+                currency: item.currency,
+              }),
+            }).catch(() => {
+              // Booking already recorded — a failed invoice email shouldn't block checkout.
             });
           }
 

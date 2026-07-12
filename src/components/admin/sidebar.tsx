@@ -9,6 +9,7 @@ import {
   CreditCard,
   BarChart3,
   LifeBuoy,
+  Mail,
   LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -22,6 +23,7 @@ const links = [
   { href: "/admin/payments", label: "Payments", icon: CreditCard },
   { href: "/admin/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/admin/support", label: "Support", icon: LifeBuoy },
+  { href: "/admin/newsletter", label: "Newsletter", icon: Mail },
 ];
 
 export default function AdminSidebar({ email }: { email?: string }) {

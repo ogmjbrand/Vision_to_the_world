@@ -19,9 +19,7 @@ export async function POST(request: NextRequest) {
     sendContactAutoReplyEmail({ to: email, name }),
   ]);
 
-  if (notification.error || autoReply.error) {
-    console.error("Contact email failed:", notification.error, autoReply.error);
-  }
-
-  return NextResponse.json({ sent: !notification.error && !autoReply.error });
+  // sendContactNotificationEmail/sendContactAutoReplyEmail already retried and
+  // logged internally — just report the combined outcome here.
+  return NextResponse.json({ sent: notification.success && autoReply.success });
 }

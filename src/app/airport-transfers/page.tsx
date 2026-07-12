@@ -25,6 +25,7 @@ export default async function AirportTransfersPage({
   const params = await searchParams;
   const airport = typeof params.airport === "string" ? params.airport : undefined;
   const dropoff = typeof params.dropoff === "string" ? params.dropoff : undefined;
+  const transferDate = typeof params.date === "string" ? params.date : undefined;
 
   const hasSearch = !!(airport && dropoff);
   const results = hasSearch ? generateTransferResults(airport) : [];
@@ -81,6 +82,7 @@ export default async function AirportTransfersPage({
                         title: `${transfer.provider} · ${transfer.vehicle} (${airport.toUpperCase()} → ${dropoff})`,
                         price: transfer.price,
                         currency: transfer.currency,
+                        travelDate: transferDate,
                       })}
                       size="sm"
                     >

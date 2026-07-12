@@ -71,12 +71,13 @@ export async function recordPaidBooking(
       currency: params.item.currency,
       status: params.bookingStatus ?? "upcoming",
       stripe_session_id: params.stripeSessionId,
+      travel_date: params.item.travelDate ?? null,
     })
     .select()
     .single();
 
   if (bookingError || !booking) {
-    return { booking: null, error: bookingError };
+    return { booking: null, invoice: null, error: bookingError };
   }
 
   await supabase.from("payments").insert({
@@ -89,15 +90,19 @@ export async function recordPaidBooking(
     status: params.paymentStatus ?? "paid",
   });
 
-  await supabase.from("invoices").insert({
-    booking_id: booking.id,
-    user_id: params.userId,
-    invoice_number: `INV-${booking.id.slice(0, 8).toUpperCase()}`,
-    amount: total,
-    currency: params.item.currency,
-  });
+  const { data: invoice } = await supabase
+    .from("invoices")
+    .insert({
+      booking_id: booking.id,
+      user_id: params.userId,
+      invoice_number: `INV-${booking.id.slice(0, 8).toUpperCase()}`,
+      amount: total,
+      currency: params.item.currency,
+    })
+    .select()
+    .single();
 
-  return { booking, error: null };
+  return { booking, invoice: invoice ?? null, error: null };
 }
 
 /** Finds a previously recorded booking for a Stripe session, if any (avoids double-recording on page refresh). */
