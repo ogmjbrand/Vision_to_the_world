@@ -58,9 +58,18 @@ export function TestimonialCard({
         isFront ? "cursor-grab active:cursor-grabbing" : "pointer-events-none",
       )}
     >
-      <span className="mx-auto flex h-20 w-20 items-center justify-center rounded-full border-2 border-white/20 bg-gradient-to-br from-accent-400 to-accent-600 text-2xl font-bold text-white">
-        {initial}
-      </span>
+      {testimonial.photo ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={testimonial.photo}
+          alt={testimonial.name}
+          className="mx-auto h-20 w-20 rounded-full border-2 border-white/20 object-cover object-top"
+        />
+      ) : (
+        <span className="mx-auto flex h-20 w-20 items-center justify-center rounded-full border-2 border-white/20 bg-gradient-to-br from-accent-400 to-accent-600 text-2xl font-bold text-white">
+          {initial}
+        </span>
+      )}
       <div className="flex items-center justify-center gap-0.5">
         {Array.from({ length: 5 }).map((_, i) => (
           <Star

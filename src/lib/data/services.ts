@@ -114,6 +114,10 @@ export const services: Service[] = [
       "Educational tours",
       "Corporate travel packages",
     ],
+    cardVideo: "/media/services/packages-luxury-resort.mp4",
+    cardVideoPoster: "/media/services/packages-luxury-resort-poster.jpg",
+    heroVideo: "/media/services/packages-luxury-resort.mp4",
+    heroVideoPoster: "/media/services/packages-luxury-resort-poster.jpg",
   },
   {
     slug: "visa-assistance",
@@ -128,6 +132,10 @@ export const services: Service[] = [
       "Destination requirements",
       "Entry regulations",
     ],
+    cardVideo: "/media/services/visa-zanzibar-stay.mp4",
+    cardVideoPoster: "/media/services/visa-zanzibar-stay-poster.jpg",
+    heroVideo: "/media/services/visa-zanzibar-stay.mp4",
+    heroVideoPoster: "/media/services/visa-zanzibar-stay-poster.jpg",
   },
   {
     slug: "travel-insurance",
@@ -142,6 +150,10 @@ export const services: Service[] = [
       "Trip cancellation protection",
       "Travel emergency support",
     ],
+    cardVideo: "/media/services/insurance-bora-bora.mp4",
+    cardVideoPoster: "/media/services/insurance-bora-bora-poster.jpg",
+    heroVideo: "/media/services/insurance-bora-bora.mp4",
+    heroVideoPoster: "/media/services/insurance-bora-bora-poster.jpg",
   },
 ];
 
