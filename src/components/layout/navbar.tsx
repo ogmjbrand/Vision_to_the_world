@@ -95,7 +95,7 @@ export default function Navbar() {
           </Link>
           <Link
             href="/auth/sign-up"
-            className="rounded-md bg-accent-500 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-accent-600"
+            className="rounded-md bg-accent-700 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-accent-800"
           >
             {t.nav.signup}
           </Link>
@@ -160,7 +160,7 @@ export default function Navbar() {
             </Link>
             <Link
               href="/auth/sign-up"
-              className="flex-1 rounded-md bg-accent-500 px-3 py-2 text-center text-sm font-semibold text-white"
+              className="flex-1 rounded-md bg-accent-700 px-3 py-2 text-center text-sm font-semibold text-white"
               onClick={() => setMobileOpen(false)}
             >
               {t.nav.signup}

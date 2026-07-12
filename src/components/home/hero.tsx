@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, ChevronDown, MapPin } from "lucide-react";
 import SearchWidget from "@/components/search/search-widget";
@@ -55,11 +56,13 @@ export default function Hero() {
               transition={{ duration: SLIDE_DURATION_MS / 1000, ease: "linear" }}
             >
               {prefersReducedMotion ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
+                <Image
                   src={current.poster}
                   alt={current.location}
-                  className="h-full w-full object-cover"
+                  fill
+                  sizes="100vw"
+                  priority={active === 0}
+                  className="object-cover"
                 />
               ) : (
                 <video
@@ -109,7 +112,7 @@ export default function Hero() {
           <div className="mt-8 flex items-center gap-3">
             <a
               href="#search"
-              className="group inline-flex items-center gap-2 rounded-full bg-accent-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-black/20 transition-colors hover:bg-accent-600"
+              className="group inline-flex items-center gap-2 rounded-full bg-accent-700 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-black/20 transition-colors hover:bg-accent-800"
             >
               Explore
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -148,11 +151,12 @@ export default function Hero() {
         onClick={() => setActive((active + 1) % heroSlides.length)}
         className="group absolute bottom-6 right-4 z-10 hidden h-20 w-32 overflow-hidden rounded-xl border border-white/20 shadow-xl transition-transform hover:-translate-y-1 sm:block sm:right-6 lg:right-8"
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
           src={next.poster}
           alt={next.location}
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+          fill
+          sizes="128px"
+          className="object-cover transition-transform duration-500 group-hover:scale-110"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
         <span className="absolute inset-x-0 bottom-1 text-center text-[11px] font-semibold text-white">

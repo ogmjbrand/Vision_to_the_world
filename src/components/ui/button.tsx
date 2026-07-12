@@ -9,7 +9,11 @@ type CommonProps = {
 };
 
 const variants: Record<NonNullable<CommonProps["variant"]>, string> = {
-  primary: "bg-accent-500 text-white hover:bg-accent-600 shadow-sm",
+  // accent-700 (not -500) so white button text clears WCAG AA's 4.5:1
+  // contrast minimum — accent-500 measures 3.10:1, accent-600 4.01:1, both
+  // fail; accent-700 measures 5.29:1. Same olive/chartreuse hue family,
+  // just the next shade down.
+  primary: "bg-accent-700 text-white hover:bg-accent-800 shadow-sm",
   secondary: "bg-brand-900 text-white hover:bg-brand-800 shadow-sm",
   outline: "border border-brand-200 text-brand-900 hover:bg-brand-50",
   ghost: "text-brand-900 hover:bg-brand-50",

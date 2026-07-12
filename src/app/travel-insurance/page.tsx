@@ -84,7 +84,7 @@ export default function TravelInsurancePage() {
               )}
             >
               {plan.highlighted && (
-                <span className="mb-3 inline-flex w-fit items-center rounded-full bg-accent-500 px-3 py-1 text-xs font-semibold text-white">
+                <span className="mb-3 inline-flex w-fit items-center rounded-full bg-accent-700 px-3 py-1 text-xs font-semibold text-white">
                   Most popular
                 </span>
               )}

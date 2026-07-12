@@ -59,7 +59,7 @@ export default function AdminSidebar({ email }: { email?: string }) {
               className={cn(
                 "flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium",
                 active
-                  ? "bg-accent-500 text-white"
+                  ? "bg-accent-700 text-white"
                   : "text-brand-200 hover:bg-brand-900",
               )}
             >

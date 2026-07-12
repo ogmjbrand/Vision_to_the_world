@@ -1,15 +1,18 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import type { GalleryMediaItem } from "@/lib/data/gallery-media";
 
 export default function MediaItem({
   item,
   className,
+  sizes = "(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw",
   onClick,
 }: {
   item: GalleryMediaItem;
   className?: string;
+  sizes?: string;
   onClick?: () => void;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -90,14 +93,13 @@ export default function MediaItem({
   }
 
   return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
+    <Image
       src={item.url}
       alt={item.title}
+      fill
+      sizes={sizes}
       className={`${className ?? ""} cursor-pointer object-cover`}
       onClick={onClick}
-      loading="lazy"
-      decoding="async"
     />
   );
 }

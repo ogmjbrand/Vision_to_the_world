@@ -59,7 +59,12 @@ export default function GalleryModal({
                 exit={{ y: 20, scale: 0.97, transition: { duration: 0.15 } }}
                 onClick={onClose}
               >
-                <MediaItem item={selectedItem} className="h-full w-full bg-black object-contain" onClick={onClose} />
+                <MediaItem
+                  item={selectedItem}
+                  className="h-full w-full bg-black object-contain"
+                  sizes="(min-width: 768px) 768px, 95vw"
+                  onClick={onClose}
+                />
                 <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-2 sm:p-3 md:p-4">
                   <h3 className="text-base font-semibold text-white sm:text-lg md:text-xl">
                     {selectedItem.title}
@@ -126,7 +131,12 @@ export default function GalleryModal({
                   }}
                   whileHover={{ scale: 1.3, rotate: 0, y: -10 }}
                 >
-                  <MediaItem item={item} className="h-full w-full" onClick={() => setSelectedItem(item)} />
+                  <MediaItem
+                    item={item}
+                    className="h-full w-full"
+                    sizes="40px"
+                    onClick={() => setSelectedItem(item)}
+                  />
                   <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-white/20" />
                 </motion.div>
               );

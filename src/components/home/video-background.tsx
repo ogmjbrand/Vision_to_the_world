@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Image from "next/image";
 import { usePrefersReducedMotion } from "@/lib/hooks/use-reduced-motion";
 
 export default function VideoBackground({
@@ -41,8 +42,7 @@ export default function VideoBackground({
         />
       )}
       {!allowMotion && poster && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={poster} alt="" className="h-full w-full object-cover" />
+        <Image src={poster} alt="" fill sizes="100vw" className="object-cover" />
       )}
       {overlay === "glass" ? (
         <div className="absolute inset-0 border-b border-[rgba(225,240,245,0.2)] bg-[rgba(13,13,13,0.35)] backdrop-blur-[12px] [-webkit-backdrop-filter:blur(12px)]" />

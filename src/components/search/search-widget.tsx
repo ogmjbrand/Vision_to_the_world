@@ -190,7 +190,7 @@ export default function SearchWidget() {
 
         <button
           type="submit"
-          className="mt-1 flex w-full items-center justify-center gap-2 rounded-lg bg-accent-500 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-accent-600 sm:w-fit sm:px-8"
+          className="mt-1 flex w-full items-center justify-center gap-2 rounded-lg bg-accent-700 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-accent-800 sm:w-fit sm:px-8"
         >
           <Search className="h-4 w-4" />
           Search
