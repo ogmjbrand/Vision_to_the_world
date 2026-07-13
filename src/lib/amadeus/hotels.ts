@@ -1,6 +1,6 @@
 import { amadeusGet } from "@/lib/amadeus/client";
 import { searchLocations } from "@/lib/amadeus/locations";
-import type { HotelResult } from "@/lib/data/mock-results";
+import { HOTEL_IMAGES, type HotelResult } from "@/lib/data/mock-results";
 
 /**
  * Fast-path city-name → IATA city code lookup for a handful of common
@@ -123,7 +123,11 @@ export async function fetchHotelOffers(
       pricePerNight: offer ? Math.round(Number(offer.price.total)) : 0,
       currency: offer?.price.currency ?? "USD",
       amenities: amenities.length > 0 ? amenities : ["Free Wi-Fi"],
-      image: `https://picsum.photos/seed/vttw-amadeus-${i}-${entry.hotel.hotelId}/640/420`,
+      // The Amadeus Hotel Offers tier this app calls doesn't return photo
+      // URLs, so this is always a placeholder — self-hosted rather than
+      // pulled from a third-party random-image CDN, for the same reason as
+      // generateHotelResults's fallback path (see mock-results.ts).
+      image: HOTEL_IMAGES[i % HOTEL_IMAGES.length],
     };
   });
 }

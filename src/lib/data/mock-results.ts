@@ -25,6 +25,23 @@ export type HotelResult = {
   image: string;
 };
 
+/**
+ * Self-hosted stand-ins for hotel photos, cycled by result index. Previously
+ * this pulled from https://picsum.photos, a third-party random-image CDN —
+ * fine when reachable, but it's an external dependency with no upside for
+ * placeholder content Vision To The World fully controls: any ad blocker,
+ * corporate firewall, or CDN hiccup on the visitor's end breaks the image
+ * with nothing the app can do about it. These ship with the app instead.
+ */
+export const HOTEL_IMAGES = [
+  "/media/gallery/tropical-garden-villa.jpg",
+  "/media/gallery/beachfront-dining.jpg",
+  "/media/gallery/vineyard-lake-sunset.jpg",
+  "/media/gallery/zanzibar-sandbar-poster.jpg",
+  "/media/gallery/rainbow-valley.jpg",
+  "/media/gallery/egypt-pyramids-panorama.jpg",
+];
+
 const AIRLINES = [
   "Vision Air",
   "SkyBridge Airlines",
@@ -126,7 +143,7 @@ export function generateHotelResults(
       pricePerNight: Math.round(60 + rand() * 400),
       currency: "USD",
       amenities: Array.from(new Set(amenities)),
-      image: `https://picsum.photos/seed/vttw-hotel-${i}-${destination}/640/420`,
+      image: HOTEL_IMAGES[i % HOTEL_IMAGES.length],
     };
   }).sort((a, b) => a.pricePerNight - b.pricePerNight);
 }

@@ -19,8 +19,8 @@ export default function HotelCard({
           src={hotel.image}
           alt={hotel.name}
           fill
+          sizes="(min-width: 640px) 224px, 100vw"
           className="object-cover"
-          unoptimized
         />
       </div>
       <div className="flex flex-1 flex-col justify-between p-5">

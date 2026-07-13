@@ -20,7 +20,7 @@ export const travelPackages: TravelPackage[] = [
     price: 1899,
     currency: "USD",
     highlights: ["Cliffside hotel", "Catamaran cruise", "Wine tasting tour"],
-    image: "https://picsum.photos/seed/vttw-pkg-santorini/640/420",
+    image: "/media/gallery/vineyard-lake-sunset.jpg",
   },
   {
     slug: "maldives-honeymoon",
@@ -31,7 +31,7 @@ export const travelPackages: TravelPackage[] = [
     price: 3299,
     currency: "USD",
     highlights: ["Overwater villa", "Couples spa", "Private beach dinner"],
-    image: "https://picsum.photos/seed/vttw-pkg-maldives/640/420",
+    image: "/media/gallery/zanzibar-sandbar-poster.jpg",
   },
   {
     slug: "orlando-family",
@@ -42,7 +42,7 @@ export const travelPackages: TravelPackage[] = [
     price: 1499,
     currency: "USD",
     highlights: ["Theme park passes", "Family suite", "Airport transfers included"],
-    image: "https://picsum.photos/seed/vttw-pkg-orlando/640/420",
+    image: "/media/gallery/sunset-road-trip.jpg",
   },
   {
     slug: "cape-town-group",
@@ -53,7 +53,7 @@ export const travelPackages: TravelPackage[] = [
     price: 2199,
     currency: "USD",
     highlights: ["Game drive safari", "Table Mountain tour", "Group discounts"],
-    image: "https://picsum.photos/seed/vttw-pkg-capetown/640/420",
+    image: "/media/gallery/rainbow-valley.jpg",
   },
   {
     slug: "london-education",
@@ -64,7 +64,7 @@ export const travelPackages: TravelPackage[] = [
     price: 1699,
     currency: "USD",
     highlights: ["Museum passes", "Campus tour", "Student group rates"],
-    image: "https://picsum.photos/seed/vttw-pkg-london/640/420",
+    image: "/media/gallery/egypt-pyramids-panorama.jpg",
   },
   {
     slug: "dubai-corporate",
@@ -75,6 +75,6 @@ export const travelPackages: TravelPackage[] = [
     price: 2499,
     currency: "USD",
     highlights: ["Meeting rooms included", "Desert safari team event", "Business-class lounge access"],
-    image: "https://picsum.photos/seed/vttw-pkg-dubai/640/420",
+    image: "/media/gallery/beachfront-dining.jpg",
   },
 ];
