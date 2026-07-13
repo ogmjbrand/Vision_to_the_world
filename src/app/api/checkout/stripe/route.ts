@@ -53,7 +53,12 @@ export async function POST(request: NextRequest) {
 
   const session = await stripe.checkout.sessions.create({
     mode: "payment",
-    payment_method_types: ["card"],
+    // No payment_method_types here on purpose: Checkout auto-offers whatever
+    // is toggled on in the Stripe Dashboard (Settings -> Payment methods) —
+    // cards, Apple Pay, Google Pay, Link, Cash App Pay, Klarna, Amazon Pay,
+    // etc. Hardcoding ["card"] would silently cap this at card-only no
+    // matter what the Dashboard says, which is exactly what was happening
+    // before this change.
     customer_email: user.email,
     // Explicit receipt_email forces Stripe to send its own payment receipt
     // for this charge regardless of the account's Dashboard "Email customers

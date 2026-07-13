@@ -8,15 +8,9 @@ import { siteConfig, fullAddress } from "@/lib/data/site-config";
 import { useLanguage } from "@/components/i18n/language-provider";
 import { getServiceCopy } from "@/lib/i18n/types";
 import LanguageSwitcher from "@/components/i18n/language-switcher";
-
-const payments = ["Stripe", "PayPal", "Cash App"];
-
-const socialLinks = [
-  { key: "facebook", monogram: "f", label: "Facebook" },
-  { key: "instagram", monogram: "IG", label: "Instagram" },
-  { key: "tiktok", monogram: "TT", label: "TikTok" },
-  { key: "youtube", monogram: "YT", label: "YouTube" },
-] as const;
+import { socialLinks } from "@/lib/data/social-links";
+import { paymentMethods } from "@/lib/data/payment-methods";
+import { cn } from "@/lib/utils";
 
 export default function Footer() {
   const { t } = useLanguage();
@@ -85,29 +79,29 @@ export default function Footer() {
             </ul>
 
             <div className="mt-5 flex items-center gap-3">
-              {socialLinks.map(({ key, monogram, label }) => {
-                const url = siteConfig.social[key];
-                return url ? (
+              {socialLinks.map(({ key, label, Icon, url }) =>
+                url ? (
                   <a
                     key={key}
                     href={url}
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={label}
-                    className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-900 text-xs font-bold text-brand-200 hover:bg-brand-800 hover:text-white"
+                    className="flex h-11 w-11 items-center justify-center rounded-full bg-brand-900 text-brand-200 transition-all duration-200 hover:-translate-y-0.5 hover:bg-accent-600 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                   >
-                    {monogram}
+                    <Icon aria-hidden size={24} />
                   </a>
                 ) : (
                   <span
                     key={key}
                     title={`${label} link coming soon`}
-                    className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-900/50 text-xs font-bold text-brand-600"
+                    aria-label={`${label} link coming soon`}
+                    className="flex h-11 w-11 items-center justify-center rounded-full bg-brand-900/50 text-brand-600"
                   >
-                    {monogram}
+                    <Icon aria-hidden size={24} />
                   </span>
-                );
-              })}
+                ),
+              )}
             </div>
 
             <div className="mt-5">
@@ -166,16 +160,23 @@ export default function Footer() {
               {t.footer.paymentsHeading}
             </h3>
             <p className="mt-4 text-sm text-brand-300">{t.footer.paymentsBlurb}</p>
-            <div className="mt-4 flex flex-wrap gap-2">
-              {payments.map((p) => (
-                <span
-                  key={p}
-                  className="rounded-md border border-brand-800 bg-brand-900 px-3 py-1.5 text-xs font-medium text-brand-100"
-                >
-                  {p}
-                </span>
+            <ul className="mt-4 flex flex-wrap gap-2">
+              {paymentMethods.map(({ id, label, Icon, dark }) => (
+                <li key={id} title={label}>
+                  <div
+                    className={cn(
+                      "flex h-9 w-12 items-center justify-center rounded-md border",
+                      dark
+                        ? "border-white/20 bg-black"
+                        : "border-brand-800 bg-brand-900",
+                    )}
+                  >
+                    <Icon aria-hidden size={20} className="text-brand-100" />
+                    <span className="sr-only">{label}</span>
+                  </div>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         </div>
 

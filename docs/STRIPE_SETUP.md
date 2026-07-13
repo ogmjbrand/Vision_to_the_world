@@ -81,6 +81,23 @@ trips people up more than anything else here:
   `[webhook:stripe] signature verification failed`) and no booking or email
   ever fires — the customer is charged with nothing recorded.
 
+## Enabling the payment methods shown at checkout
+
+The homepage's "Secure Payments" strip and the footer both display icons for
+Visa, Mastercard, American Express, Apple Pay, Google Pay, Link, Cash App
+Pay, Klarna, and Amazon Pay (`src/lib/data/payment-methods.tsx`). The
+Checkout Session no longer hardcodes `payment_method_types: ["card"]` — it's
+omitted entirely, which tells Stripe Checkout to automatically offer
+whichever payment methods are toggled on in **Stripe Dashboard → Settings →
+Payment methods**, based on the customer's currency/location and each
+method's own eligibility rules (Klarna and Amazon Pay in particular are
+currency/country-gated). That icon strip is a customer-facing claim about
+what's accepted — it doesn't control anything — so go through that Dashboard
+page and turn on each method actually being advertised, or trim the list in
+`payment-methods.tsx` to match what's really enabled. Cards, Apple Pay, and
+Google Pay are on by default for most accounts; the rest usually need an
+explicit opt-in.
+
 ## Why the checkout session also needed a change
 
 `src/app/api/checkout/stripe/route.ts` now requires the customer to be
