@@ -1,6 +1,7 @@
 export type TravelPackage = {
   slug: string;
   name: string;
+  location: string;
   category: string;
   description: string;
   duration: string;
@@ -8,12 +9,16 @@ export type TravelPackage = {
   currency: string;
   highlights: string[];
   image: string;
+  /** Optional autoplaying showcase clip — falls back to `image` as the poster frame until playable, and as the card's static thumbnail wherever video isn't used. */
+  video?: string;
+  videoPoster?: string;
 };
 
 export const travelPackages: TravelPackage[] = [
   {
     slug: "santorini-vacation",
     name: "Santorini Getaway",
+    location: "Santorini, Greece",
     category: "Vacation",
     description: "Relax on the caldera with sunset views, wine tastings, and boat excursions.",
     duration: "7 days / 6 nights",
@@ -25,6 +30,7 @@ export const travelPackages: TravelPackage[] = [
   {
     slug: "maldives-honeymoon",
     name: "Maldives Honeymoon",
+    location: "Maldives",
     category: "Honeymoon",
     description: "Overwater villas, private dinners, and spa days for two.",
     duration: "6 days / 5 nights",
@@ -36,6 +42,7 @@ export const travelPackages: TravelPackage[] = [
   {
     slug: "orlando-family",
     name: "Orlando Family Fun",
+    location: "Orlando, Florida, USA",
     category: "Family",
     description: "Theme parks, kid-friendly resorts, and flexible daily itineraries.",
     duration: "5 days / 4 nights",
@@ -47,6 +54,7 @@ export const travelPackages: TravelPackage[] = [
   {
     slug: "cape-town-group",
     name: "Cape Town Group Adventure",
+    location: "Cape Town, South Africa",
     category: "Group Travel",
     description: "Safari excursions, coastal drives, and shared accommodation for groups.",
     duration: "8 days / 7 nights",
@@ -58,6 +66,7 @@ export const travelPackages: TravelPackage[] = [
   {
     slug: "london-education",
     name: "London Educational Tour",
+    location: "London, United Kingdom",
     category: "Educational",
     description: "Guided museum visits, university campus tours, and cultural workshops.",
     duration: "6 days / 5 nights",
@@ -69,6 +78,7 @@ export const travelPackages: TravelPackage[] = [
   {
     slug: "dubai-corporate",
     name: "Dubai Corporate Retreat",
+    location: "Dubai, United Arab Emirates",
     category: "Corporate",
     description: "Conference-ready hotels, business lounges, and team-building excursions.",
     duration: "4 days / 3 nights",
@@ -76,5 +86,131 @@ export const travelPackages: TravelPackage[] = [
     currency: "USD",
     highlights: ["Meeting rooms included", "Desert safari team event", "Business-class lounge access"],
     image: "/media/gallery/beachfront-dining.jpg",
+  },
+  {
+    slug: "amalfi-coast-retreat",
+    name: "Amalfi Coast Cliffside Retreat",
+    location: "Amalfi Coast, Italy",
+    category: "Honeymoon",
+    description: "A cliffside suite over the water with candlelit terraces and sweeping coastal views.",
+    duration: "6 days / 5 nights",
+    price: 2899,
+    currency: "USD",
+    highlights: ["Cliffside infinity suite", "Private sunset terrace", "Coastal boat excursion"],
+    image: "/media/packages/amalfi-coast-retreat-poster.jpg",
+    video: "/media/packages/amalfi-coast-retreat.mp4",
+    videoPoster: "/media/packages/amalfi-coast-retreat-poster.jpg",
+  },
+  {
+    slug: "ibiza-villa-escape",
+    name: "Ibiza Private Villa Escape",
+    location: "Ibiza, Spain",
+    category: "Vacation",
+    description: "A hillside private villa with its own pool, terraced gardens, and sea views.",
+    duration: "5 days / 4 nights",
+    price: 2399,
+    currency: "USD",
+    highlights: ["Private pool villa", "Hillside garden views", "Sunset terrace"],
+    image: "/media/packages/ibiza-villa-escape-poster.jpg",
+    video: "/media/packages/ibiza-villa-escape.mp4",
+    videoPoster: "/media/packages/ibiza-villa-escape-poster.jpg",
+  },
+  {
+    slug: "mykonos-seaside-getaway",
+    name: "Stella Blue Seaside Getaway",
+    location: "Mykonos, Greece",
+    category: "Vacation",
+    description: "Beachfront infinity pool suites with whitewashed Cycladic architecture and sunset views.",
+    duration: "6 days / 5 nights",
+    price: 2999,
+    currency: "USD",
+    highlights: ["Beachfront infinity pool", "Cycladic-style suite", "Sunset lounge deck"],
+    image: "/media/packages/mykonos-seaside-getaway-poster.jpg",
+    video: "/media/packages/mykonos-seaside-getaway.mp4",
+    videoPoster: "/media/packages/mykonos-seaside-getaway-poster.jpg",
+  },
+  {
+    slug: "bali-cave-spa-retreat",
+    name: "Bali Cave Spa Retreat",
+    location: "Ubud, Bali, Indonesia",
+    category: "Honeymoon",
+    description: "A jungle-canopy grotto spa with private plunge pools and couples treatment suites.",
+    duration: "7 days / 6 nights",
+    price: 2599,
+    currency: "USD",
+    highlights: ["Grotto spa pools", "Jungle-canopy lounge", "Couples treatment suite"],
+    image: "/media/packages/bali-cave-spa-retreat-poster.jpg",
+    video: "/media/packages/bali-cave-spa-retreat.mp4",
+    videoPoster: "/media/packages/bali-cave-spa-retreat-poster.jpg",
+  },
+  {
+    slug: "antalya-riviera-resort",
+    name: "Antalya Riviera Mega-Resort",
+    location: "Antalya, Turkey",
+    category: "Vacation",
+    description: "An oversized beachfront infinity pool resort with private cabanas and all-inclusive dining.",
+    duration: "7 days / 6 nights",
+    price: 1999,
+    currency: "USD",
+    highlights: ["Oversized infinity pool", "Private beach cabanas", "All-inclusive dining"],
+    image: "/media/packages/antalya-riviera-resort-poster.jpg",
+    video: "/media/packages/antalya-riviera-resort.mp4",
+    videoPoster: "/media/packages/antalya-riviera-resort-poster.jpg",
+  },
+  {
+    slug: "cappadocia-cave-resort",
+    name: "Cappadocia Cave Resort Escape",
+    location: "Cappadocia, Turkey",
+    category: "Vacation",
+    description: "Carved cave suites and a multi-level grotto pool, with sunrise hot air balloon views.",
+    duration: "4 days / 3 nights",
+    price: 1799,
+    currency: "USD",
+    highlights: ["Carved cave suite", "Multi-level grotto pool", "Hot air balloon views"],
+    image: "/media/packages/cappadocia-cave-resort-poster.jpg",
+    video: "/media/packages/cappadocia-cave-resort.mp4",
+    videoPoster: "/media/packages/cappadocia-cave-resort-poster.jpg",
+  },
+  {
+    slug: "jade-mountain-st-lucia",
+    name: "Jade Mountain Sanctuary",
+    location: "Soufrière, St. Lucia",
+    category: "Honeymoon",
+    description: "An open-air sanctuary suite with a private infinity pool framed by the Pitons.",
+    duration: "5 days / 4 nights",
+    price: 3799,
+    currency: "USD",
+    highlights: ["Private infinity pool suite", "Piton mountain views", "Open-air sanctuary design"],
+    image: "/media/packages/jade-mountain-st-lucia-poster.jpg",
+    video: "/media/packages/jade-mountain-st-lucia.mp4",
+    videoPoster: "/media/packages/jade-mountain-st-lucia-poster.jpg",
+  },
+  {
+    slug: "lake-como-sunset-retreat",
+    name: "Lake Como Sunset Retreat",
+    location: "Lake Como, Italy",
+    category: "Vacation",
+    description: "A poolside cabana deck with mountain-lake views and private sunset dinners.",
+    duration: "5 days / 4 nights",
+    price: 2699,
+    currency: "USD",
+    highlights: ["Poolside cabana deck", "Mountain-lake views", "Private sunset dinner"],
+    image: "/media/packages/lake-como-sunset-retreat-poster.jpg",
+    video: "/media/packages/lake-como-sunset-retreat.mp4",
+    videoPoster: "/media/packages/lake-como-sunset-retreat-poster.jpg",
+  },
+  {
+    slug: "zanzibar-beach-adventure",
+    name: "Zanzibar Beach Adventure",
+    location: "Zanzibar, Tanzania",
+    category: "Group Travel",
+    description: "White-sand beaches, watersports, and a sunset sandbar excursion for groups.",
+    duration: "6 days / 5 nights",
+    price: 2199,
+    currency: "USD",
+    highlights: ["White-sand beach access", "Watersports included", "Sunset sandbar excursion"],
+    image: "/media/packages/zanzibar-beach-adventure-poster.jpg",
+    video: "/media/packages/zanzibar-beach-adventure.mp4",
+    videoPoster: "/media/packages/zanzibar-beach-adventure-poster.jpg",
   },
 ];
